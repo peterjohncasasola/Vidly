@@ -1,0 +1,67 @@
+﻿@using Vidly.Models
+@model Vidly.Models.Movie
+
+@{
+  ViewBag.Title = "Create Movie";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="pb-2">New Movie</h2>
+<hr />
+
+@using (Html.BeginForm("Submit", "Movies", FormMethod.Post))
+{
+  @Html.AntiForgeryToken()
+
+  <div class="form-group row mb-4">
+    @Html.LabelFor(m => m.Name, new { @class = "col-sm-12 col-lg-2 col-form-label" })
+    <div class="col-sm-12 col-lg-10">
+      @Html.TextBoxFor(m => m.Name, new { @class = "col-sm-12 col-lg-10 col-md-11 form-control", @size = "50" })
+      @Html.ValidationMessageFor(m => m.Name)
+    </div>
+  </div>
+
+  <div class="form-group row mb-4">
+    @Html.LabelFor(m => m.DateRelease, new { @class = "col-sm-12 col-lg-2 col-form-label" })
+    <div class="col-sm-12 col-lg-10">
+      @Html.TextBoxFor(m => m.DateRelease, "{0:yyyy-MM-dd}", new { @class = "col-sm-12 col-lg-10 col-md-11 form-control", @type = "date" })
+      <span class="text-dark mt-1">
+        @Html.ValidationMessageFor(m => m.DateRelease)
+      </span>
+      </div>
+  </div>
+
+  <div class="form-group row mb-4">
+    @Html.LabelFor(m => m.Genre, new { @class = "col-sm-12 col-lg-2 col-form-label" })
+    <div class="col-sm-12 col-lg-10">
+      @Html.DropDownListFor(m => m.Genre,
+        new SelectList(Enum.GetValues(typeof(Genre))),
+        "Select Genre",
+        new { @class = "col-sm-12 col-lg-10 col-md-11 form-select" })
+      <span class="text-dark mt-1">
+        @Html.ValidationMessageFor(m => m.Genre)
+      </span>
+    </div>
+  </div>
+
+  <div class="form-group row mb-4">
+    @Html.LabelFor(m => m.Stock, new { @class = "col-sm-12 col-lg-2 col-form-label" })
+    <div class="col-sm-12 col-lg-10">
+      @Html.TextBoxFor(m => m.Stock, new { @class = "col-sm-12 col-lg-10 col-md-11 form-control", @type = "number" })
+      <span class="text-dark mt-1">
+        @Html.ValidationMessageFor(m => m.Stock)
+      </span>
+      </div>
+  </div>
+
+  <div class="form-group row mt-4">
+    <div class="col-sm-12 col-lg-10 offset-2">
+      @Html.HiddenFor(m => m.Id)
+      <button type="submit" class="btn btn-primary me-2">Submit</button>
+      @Html.ActionLink("Cancel", "Index", new { }, new { @class = "btn btn-secondary" })
+    </div>
+  </div>
+}
+@section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
+}

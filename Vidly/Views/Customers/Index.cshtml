@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Vidly.Models.Customer>
+
+@{
+  ViewBag.Title = "Index";
+  Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+  <div class="col-10">
+    <h2>Customers</h2>
+  </div>
+  <div class="col-2">
+    @Html.ActionLink("New Customer", "New", new { }, new { @class = "btn btn-primary" })
+  </div>
+</div>
+
+<table class="table table-bordered table-hover">
+  <tr>
+    <th class="table-active">
+      @Html.DisplayNameFor(model => model.Id)
+    </th>
+    <th class="table-active">
+      @Html.DisplayNameFor(model => model.Name)
+    </th>
+    <th class="table-active">
+      @Html.DisplayNameFor(model => model.Address)
+    </th>
+    <th class="table-active">
+      @Html.DisplayNameFor(model => model.BirthDate)
+    </th>
+    <th class="table-active">
+      @Html.DisplayNameFor(model => model.MembershipType.Name)
+    </th>
+    <th class="table-active"></th>
+  </tr>
+
+  @foreach (var customer in Model) 
+  {
+<tr>
+  <td>
+    @Html.DisplayFor(modelItem => customer.Id)
+  </td>
+  <td>
+    @Html.DisplayFor(modelItem => customer.Name)
+  </td>
+  <td>
+    @Html.DisplayFor(modelItem => customer.Address)
+  </td>
+  <td>
+    @Html.DisplayFor(modelItem => customer.BirthDate)
+  </td> 
+  <td>
+    @Html.DisplayFor(modelItem => customer.MembershipType.Name)
+  </td>
+  <td>
+    @Html.ActionLink("Edit", "Edit", new { id = customer.Id }) |
+    @Html.ActionLink("Details", "Details", new { id = customer.Id }) |
+    @Html.ActionLink("Delete", "Delete", new { id = customer.Id })
+  </td>
+</tr>
+  }
+
+</table>
