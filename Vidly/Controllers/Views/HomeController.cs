@@ -8,6 +8,11 @@ namespace Vidly.Controllers
         {
             return View();
         }
+        
+        public ActionResult NewRental()
+        {
+            return View("RentalView");
+        }
 
         public ActionResult About()
         {

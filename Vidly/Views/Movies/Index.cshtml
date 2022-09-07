@@ -2,52 +2,115 @@
 @model IEnumerable<Vidly.Models.Movie>
 
 @{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+  ViewBag.Title = "Index";
+  Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2 class="py-2">Movies</h2>
+@section styles {
+  <style type="text/css">
+    .paginate_button {
+      padding: 10px !important;
+    }
 
-<p>
-  @Html.ActionLink("New Movie", "New", new {}, new {@class="btn btn-primary"})
-</p>
-<table class="table table-bordered">
-  <tr>
-    <th>
-      @Html.DisplayNameFor(model => model.Name)
-    </th>
-    <th>
-      @Html.DisplayNameFor(model => model.Genre)
-    </th>
-    <th>
-      @Html.DisplayNameFor(model => model.DateRelease)
-    </th>
-    <th>
-      @Html.DisplayNameFor(model => model.Stock)
-    </th>
-    <th></th>
-  </tr>
-
-@foreach (var movie in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => movie.Name)
-        </td>
-      <td>
-        @Html.DisplayFor(modelItem => movie.Genre)
-      </td>
-      <td>
-        @Html.DisplayFor(modelItem => movie.DateRelease, "{0:yyyy-MM-dd}")
-      </td>
-      <td>
-        @Html.DisplayFor(modelItem => movie.Stock)
-      </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=movie.Id }, new { @class= "btn btn-info btn-sm px-3" }) |
-            @Html.ActionLink("Details", "Details", new { id=movie.Id }, new { @class = "btn btn-success btn-sm px-3" }) |
-            @Html.ActionLink("Delete", "Delete", new { id=movie.Id }, new { @class = "btn btn-danger btn-sm px-3" })
-        </td>
-    </tr>
+  </style>
 }
+<p>
+  @Html.ActionLink("New Movie", "New", new { }, new { @class = "btn btn-primary" })
+</p>
+<table class="table table-bordered table-condensed" id="data-table">
+  <thead>
+    <tr>
+      <th>
+        Movie
+      </th>
+      <th>
+        Genre
+      </th>
+      <th>
+        Released Date
+      </th>
+      <th>
+        Available
+      </th>
+      <th></th>
+    </tr>
+  </thead>
 
 </table>
+@section scripts {
+  <script type="text/javascript">
+    $(document).ready(function () {
+    
+      $("#data-table")
+        .DataTable({
+          pageLength: 10,
+          recordsTotal: 10,
+          start: 1,
+          searchDelay: 300,
+          page: 0,
+          ajax: function (data, callback, settings) {
+            let columns = ['Name', 'Genre', 'DateRelease', 'Stock'];
+            const order = data.order[0];
+
+            let params = {
+              page: (data.start / data.length) + 1,
+              pageSize: data.length,
+              searchBy: 'Name',
+              search: data.search?.value,
+              orderBy: columns[order.column],
+              sortBy: columns[order.dir],
+            }
+            let search = data.search?.value;
+
+            $.ajax({
+              url: `/api/movies?${setQueryParams(params)}`,
+                dataType: 'json',
+                type: 'GET',
+                success: function (data, textStatus, xhr) {
+                  callback({  
+                    data: data.data,                      
+                    recordsTotal: data.meta.totalItems,
+                    recordsFiltered: data.meta.totalItems,
+                    start: data.meta.from,
+                    end: data.meta.to,
+                    page: data.meta.currentPage + 1,
+                  });
+              }
+            });
+          },
+        processing: true,
+          serverSide: true,
+        info: true,
+        columns: [
+          {
+            data: "name",
+          },
+          {
+            data: "genre",
+          },
+          {
+            data: "dateRelease",
+            render: function (data) {
+              return new moment(data).format("MM/DD/yyyy");
+            }
+          },
+          {
+            data: "stock",
+          },
+          {
+            data: "id",
+            render: function (data) {
+              return "<button class='btn btn-danger btn-sm js-delete' data-customer-id=" + data + ">Delete</button>";
+            }
+          },
+
+        ]
+      });
+    })
+
+  
+  </script>
+}
+
+

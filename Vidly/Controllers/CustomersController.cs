@@ -17,10 +17,9 @@ namespace Vidly.Controllers
     }
 
     // GET: Customers
-    public async Task<ActionResult> Index()
+    public ViewResult Index()
     {
-      var customers = await _dbContext.Customers.Include(c => c.MembershipType).ToListAsync();
-      return View(customers);
+      return View("AjaxView");
     }
 
     public async Task<ActionResult> Details(int? id)

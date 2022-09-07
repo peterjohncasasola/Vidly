@@ -1,0 +1,212 @@
+﻿@model dynamic
+
+@{
+  ViewBag.Title = "New Rental Form";
+}
+
+@section styles {
+  <style type="text/css">
+    span.twitter-typeahead {
+      display: block !important;
+    }
+
+    .empty-message {
+      padding: 5px 0px 5px 0px;
+      text-align: center;
+    }
+  </style>
+}
+
+<h2>New Rental Form</h2>
+<div class="row">
+  <div class="col-lg-4">
+    <form id="newRental">
+      <div class="form-group">
+        <label class="form-label mt-3">Customer</label>
+        <div class="tt-container col-lg-12">
+          <input id="customer" name="customer" data-rule-validCustomer="true" required type="text" value="" class="form-control" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label mt-3">Movie</label>
+        <div class="tt-container col-lg-12">
+          <input id="movie" name="movie" data-rule-atLeastOneMovie="true" type="text" value="" class="form-control" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 col-sm-4">
+          <ul id="movies" class="list-group"></ul>
+        </div>
+      </div>
+
+      <button class="btn btn-primary mt-3">Submit</button>
+    </form>
+  </div>
+  <div class="col-lg-8 mt-8">
+    <table class="table table-bordered table-hover overflow-hidden" id="customer-table">
+      <tr>
+
+        <th>
+          Movie
+        </th>
+        <th>
+          Date Released
+        </th>
+        <th>
+          Genre
+        </th>
+        <th></th>
+      </tr>
+      <tbody id="customer-table-body"></tbody>
+    </table>
+  </div>
+</div>
+
+@section scripts
+{
+  @Scripts.Render("~/bundles/jqueryval")
+  <script src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
+  <script>
+    let vm = {
+      movieIds: []
+    };
+
+    function remove(id) {
+      const elementId = `btn-delete-${id}`
+      document.getElementById(elementId).parentElement.parentElement.remove();
+      const index = vm.movieIds.findIndex(movieId => movieId == id);
+      vm.movieIds.splice(index, 1);
+    }
+
+
+
+    $(document).ready(function () {
+
+      const query = "pageSize=15&orderBy=Name&searchBy=Name&comparison=contains&search=%QUERY%";
+
+      const customers = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.whitespace('name'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        remote: {
+          url: `/api/customers?${query}`,
+          wildcard: '%QUERY%',
+          filter: function (response) {
+            return response.data;
+          }
+        },
+      });
+
+
+      $('#customer').typeahead({
+        minLength: 3,
+        highlight: true,
+      }, {
+        name: 'customers',
+        display: 'name',
+        source: customers,
+        limit: 10,
+        templates: {
+          empty: [
+            '<div class="empty-message">',
+            'unable to find any customer that match the current query',
+            '</div>'
+          ].join('\n'),
+        }
+      }).on("typeahead:select", function (e, customer) {
+        vm.customerId = customer.id;
+      });
+
+      const movies = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace("name"),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        remote: {
+          url: `/api/movies?${query}&onlyAvailable=true`,
+          wildcard: '%QUERY%',
+          filter: function (response) {
+            return response.data;
+          }
+        },
+        
+      });
+
+      movies.initialize();
+
+      $('#movie').typeahead({
+        minLength: 3,
+        highlight: true,
+        limit: 10
+      }, {
+        name: 'movies',
+        display: "name",
+        source: movies,
+        templates: {
+          empty: [
+            '<div class="empty-message">',
+            'unable to find any movie that match the current query',
+            '</div>'
+          ].join('\n'),
+        }
+      }).on("typeahead:select", function (e, movie) {
+        let isAlready = vm.movieIds.some(id => id === movie.id);
+
+        if (!isAlready) {
+          $("#customer-table-body").append(
+            `
+              <tr>
+                <td class="text-truncate">
+                  ${movie.name}
+                </td>
+
+                <td class="text-truncate" style="max-width: 200px;">
+                  ${new moment(movie.releaseDate).format("MM/DD/yyyy")}
+                </td>
+
+                  <td class="text-truncate" style="max-width: 200px;">
+                  ${movie.genre}
+                </td>
+
+                <td style="max-width: 150px;">
+                  <button  class="btn btn-danger btn-delete" onclick="remove(${movie.id})" id="btn-delete-${movie.id}" data-id="${movie.id}">Remove</button>
+                </td>
+              </tr>
+            `
+          );
+          vm.movieIds.push(movie.id);
+        }
+        $("#movie").typeahead("val", "");
+
+      });
+      $.validator.addMethod("validCustomer", function () {
+        return vm.customerId && vm.customerId !== 0;
+      }, "Please select a valid customer.");
+      $.validator.addMethod("atLeastOneMovie", function () {
+        return vm.movieIds.length > 0;
+      }, "Please select at least one movie.");
+
+      let validator = $("#newRental").validate({
+        submitHandler: function () {
+          $.ajax({
+            url: "/api/rentals",
+            method: "post",
+            data: vm
+          })
+            .done(function () {
+              // toastr.success("Rentals successfully recorded.");
+              $("#customer").typeahead("val", "");
+              $("#movie").typeahead("val", "");
+              $("#movies").empty();
+              vm = { movieIds: [] };
+              validator.resetForm();
+            })
+            .fail(function () {
+              // toastr.error("Something unexpected happened.");
+            });
+          return false;
+        }
+      });
+    });
+
+  </script>
+}

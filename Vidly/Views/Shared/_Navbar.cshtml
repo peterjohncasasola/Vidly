@@ -9,6 +9,12 @@
       <ul class="navbar-nav me-auto">
         <li class="nav-item">@Html.ActionLink("Vidly", "Index", "Home", new {}, new { @class= "nav-link active" })</li>
         <li class="nav-item">
+          @Html.ActionLink("New Rental", "New", "Rentals", new { }, new { @class = "nav-link" })
+        </li>
+        <li class="nav-item">
+          @Html.ActionLink("Rentals", "Index", "Rentals", new { }, new { @class = "nav-link" })
+        </li>
+        <li class="nav-item">
           @Html.ActionLink("Movies", "Index", "Movies", new { }, new { @class = "nav-link" })
         </li>
         <li class="nav-item">
@@ -17,11 +23,12 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Create New </a>
           <div class="dropdown-menu">
-            @Html.ActionLink("Customers", "New", "Customers", new { },
+            @Html.ActionLink("Customer", "New", "Customers", new { },
               new { @class = "dropdown-item" })
             <div class="dropdown-divider"></div>
             @Html.ActionLink("Movies", "New", "Movies", new { }, new { @class = "dropdown-item" })
-          </div>
+          
+            </div>
         </li>
         </ul>
     </div>

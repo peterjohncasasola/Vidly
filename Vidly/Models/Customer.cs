@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Vidly.Customs.Data_Annotations;
@@ -8,6 +9,9 @@ namespace Vidly.Models
 {
   public class Customer
   {
+    public Customer()
+    {
+    }
     [Key]
     public int Id { get; set; }
 
@@ -26,10 +30,11 @@ namespace Vidly.Models
 
     [Display(Name = "Subscribe to Newsletter?")]  
     public bool IsSubscribedToNewsLetter { get; set; }
-    public MembershipType MembershipType { get; set; }
 
     [Display(Name = "Membership")]
     [Required]
     public int MembershipTypeId { get; set; }
+    public MembershipType MembershipType { get; set; }
+    
   }
 }

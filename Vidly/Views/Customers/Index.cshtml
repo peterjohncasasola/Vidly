@@ -10,7 +10,85 @@
     <h2>Customers</h2>
   </div>
   <div class="col-2">
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      Launch demo modal
+    </button>
     @Html.ActionLink("New Customer", "New", new { }, new { @class = "btn btn-primary" })
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" novalidate="novalidate">
+          <div class="form-group row mb-3">
+            <label class="col-sm-12 col-lg-1 col-form-label" for="Customer_Name">Name</label>
+            <div class="col-sm-12 col-lg-10">
+              <input class="col-sm-12 col-lg-10 form-control" data-val="true" data-val-length="The field Name must be a string with a maximum length of 255." data-val-length-max="255" data-val-required="The Name field is required." id="Customer_Name" name="Customer.Name" type="text" value="">
+              <span class="text-danger pt-1">
+                <span class="field-validation-valid" data-valmsg-for="Customer.Name" data-valmsg-replace="true"></span>
+              </span>
+            </div>
+          </div>
+          <div class="form-group row mb-3">
+            <label class="col-sm-12 col-lg-1 col-form-label" for="Customer_Address">Address</label>
+            <div class="col-sm-12 col-lg-10">
+              <input class="col-sm-12 col-lg-10 form-control" id="Customer_Address" name="Customer.Address" size="50" type="text" value="">
+            </div>
+          </div>
+          <div class="form-group row mb-3">
+            <label class="col-sm-12 col-lg-1 col-form-label" for="Customer_MembershipTypeId">Membership</label>
+            <div class="col-sm-12 col-lg-11">
+              <select class="col-sm-11 col-md-11 form-select" data-val="true" data-val-number="The field Membership must be a number." data-val-required="The Membership field is required." id="Customer_MembershipTypeId" name="Customer.MembershipTypeId">
+                <option value="">Select Membership Type</option>
+                <option value="9">Membership 1</option>
+                <option value="10">Membership 2</option>
+              </select>
+              <span class="text-danger mt-1">
+                <span class="field-validation-valid" data-valmsg-for="Customer.MembershipTypeId" data-valmsg-replace="true"></span>
+              </span>
+            </div>
+          </div>
+          <div class="form-group row mb-3">
+            <label class="col-sm-12 col-lg-1 col-form-label" for="Customer_BirthDate">Date of Birth</label>
+            <div class="col-sm-12 col-lg-11">
+              <input class="col-sm-12 col-lg-11 form-control" data-val="true" data-val-date="The field Date of Birth must be a date." id="Customer_BirthDate" name="Customer.BirthDate" type="date" value="">
+              <span class="text-danger mt-1">
+                <span class="field-validation-valid" data-valmsg-for="Customer.BirthDate" data-valmsg-replace="true"></span>
+              </span>
+            </div>
+          </div>
+          <div class="form-group row mb-3">
+            <label class="col-sm-12 col-lg-1"></label>
+            <div class="col-lg-11 col-sm-12">
+              <div class="form-check">
+                <input class="form-check-input" data-val="true" data-val-required="The Subscribe to Newsletter? field is required." id="Customer_IsSubscribedToNewsLetter" name="Customer.IsSubscribedToNewsLetter" type="checkbox" value="true"><input name="Customer.IsSubscribedToNewsLetter" type="hidden" value="false">
+                <label class="form-check-label" for="Customer_IsSubscribedToNewsLetter">Subscribe to Newsletter?</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row mt-3">
+            <label class="col-sm-12 col-lg-1"></label>
+            <div class="col-sm-12 col-lg-11">
+              <input data-val="true" data-val-number="The field Id must be a number." data-val-required="The Id field is required." id="Customer_Id" name="Customer.Id" type="hidden" value="">
+              <button type="submit" class="btn btn-primary me-2">Submit</button>
+              <a class="btn btn-secondary" href="/Customers">Cancel</a>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -34,30 +112,30 @@
     <th class="table-active"></th>
   </tr>
 
-  @foreach (var customer in Model) 
+  @foreach (var customer in Model)
   {
-<tr>
-  <td>
-    @Html.DisplayFor(modelItem => customer.Id)
-  </td>
-  <td>
-    @Html.DisplayFor(modelItem => customer.Name)
-  </td>
-  <td>
-    @Html.DisplayFor(modelItem => customer.Address)
-  </td>
-  <td>
-    @Html.DisplayFor(modelItem => customer.BirthDate)
-  </td> 
-  <td>
-    @Html.DisplayFor(modelItem => customer.MembershipType.Name)
-  </td>
-  <td>
-    @Html.ActionLink("Edit", "Edit", new { id = customer.Id }) |
-    @Html.ActionLink("Details", "Details", new { id = customer.Id }) |
-    @Html.ActionLink("Delete", "Delete", new { id = customer.Id })
-  </td>
-</tr>
+    <tr>
+      <td>
+        @Html.DisplayFor(modelItem => customer.Id)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => customer.Name)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => customer.Address)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => customer.BirthDate)
+      </td>
+      <td>
+        @Html.DisplayFor(modelItem => customer.MembershipType.Name)
+      </td>
+      <td>
+        @Html.ActionLink("Edit", "Edit", new { id = customer.Id }) |
+        @Html.ActionLink("Details", "Details", new { id = customer.Id }) |
+        @Html.ActionLink("Delete", "Delete", new { id = customer.Id })
+      </td>
+    </tr>
   }
 
 </table>

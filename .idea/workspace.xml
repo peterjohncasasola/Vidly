@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="89f1f2a4-6928-4411-9518-0d43c4fb7db7" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Vidly/Content/Site.css" beforeDir="false" afterPath="$PROJECT_DIR$/Vidly/Content/Site.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vidly/Controllers/Api/CustomersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Vidly/Controllers/Api/CustomersController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vidly/Controllers/CustomersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Vidly/Controllers/CustomersController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vidly/Customs/Data Annotations/DateRangeAttribute.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Vidly/Customs/Data Annotations/DateRangeAttribute.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vidly/Customs/Extensions/Models/Links.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Vidly/Customs/Extensions/Models/Links.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vidly/Customs/Extensions/Models/QueryObject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Vidly/Customs/Extensions/Models/QueryObject.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vidly/Customs/Extensions/QueryableExtension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Vidly/Customs/Extensions/QueryableExtension.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vidly/Global.asax.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Vidly/Global.asax.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vidly/Vidly.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Vidly/Vidly.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vidly/Views/Customers/CustomerForm.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Vidly/Views/Customers/CustomerForm.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vidly/Views/Customers/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Vidly/Views/Customers/Index.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Vidly/packages.config" beforeDir="false" afterPath="$PROJECT_DIR$/Vidly/packages.config" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2EDSvPWbFKA3HOYq83LCau531jZ" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="89f1f2a4-6928-4411-9518-0d43c4fb7db7" name="Changes" comment="" />
+      <created>1662128897503</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1662128897503</updated>
+      <workItem from="1662128904089" duration="8565000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

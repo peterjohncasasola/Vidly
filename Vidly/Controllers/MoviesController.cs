@@ -44,7 +44,7 @@ namespace Vidly.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Submit(Movie movie)
         {
-          if (!ModelState.IsValid) return View("MovieForm", movie);
+          // if (!ModelState.IsValid) return View("MovieForm", movie);
 
           if (movie.Id > 0)
           {

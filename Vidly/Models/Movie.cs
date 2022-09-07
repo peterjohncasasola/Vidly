@@ -20,7 +20,6 @@ namespace Vidly.Models
     [DateRange]
     [DisplayFormat(DataFormatString = "{0:MMMM d, yyyy}")]
     public DateTime DateRelease { get; set; }
-    
     [Required]
     public int Stock { get; set; }
   }
