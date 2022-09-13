@@ -15,7 +15,7 @@ namespace Vidly
     public void ConfigureAuth(IAppBuilder app)
     {
       // Configure the db context, user manager and signin manager to use a single instance per request
-      app.CreatePerOwinContext(ApplicationDbContext.Create);
+      app.CreatePerOwinContext(AppDbContext.Create);
       app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
       app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
@@ -54,9 +54,9 @@ namespace Vidly
       //   consumerKey: "",
       //   consumerSecret: "");
 
-      app.UseFacebookAuthentication(
-         appId: "601658185008847",
-         appSecret: "fd73969b7aabf49de8298723e819a51a");
+      //app.UseFacebookAuthentication(
+      //   appId: "601658185008847",
+      //   appSecret: "fd73969b7aabf49de8298723e819a51a");
 
       // app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
       // {

@@ -62,7 +62,7 @@ namespace Vidly.Migrations
                 .RuleFor(c => c.DateRelease, f => f.Date.Recent())
                 .RuleFor(c => c.Genre, f => f.Music.Genre());
 
-            dbContext.Movies.AddRange(dummy.Generate(100));
+            //dbContext.Movies.AddRange(dummy.Generate(100));
             
             dbContext.SaveChanges();
         }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Vidly.Customs.Data_Annotations;
-using Vidly.Migrations;
 
 namespace Vidly.Models
 {

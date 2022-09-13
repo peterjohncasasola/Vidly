@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using Vidly.Customs.Data_Annotations;
-using Vidly.Migrations;
 
 namespace Vidly.Models.DTO
 {
