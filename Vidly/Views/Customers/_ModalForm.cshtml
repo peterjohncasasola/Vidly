@@ -1,0 +1,43 @@
+﻿@model Vidly.Models.Customer
+
+<!-- Modal -->
+<div class="modal fade" id="modal-dialog" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen-sm-down modal-fullscreen-md-down" role="document">
+    <form id="modal-form">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title" id="modal-label">Modal title</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="customer-name" class="col-form-label">Name:</label>
+            <input type="text" class="form-control" id="customer-name" required name="customer-name">
+          </div>
+          <div class="mb-3">
+            <label for="customer-address" class="col-form-label">Address:</label>
+            <input type="text" class="form-control" id="customer-address" name="customer-address">
+          </div>
+          <div class="mb-3">
+            <label for="membership-type" class="col-form-label">Membership</label>
+            <select class="form-select" required id="membership-type" name="membership-type">
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="col-form-label" for="birthdate">Date of Birth</label>
+            <input class="form-control" id="birthdate" required name="birthdate" type="date" value="">
+          </div>
+          <div class="form-check mb-3">
+            <label id="label-status" for="subscribe">Subscribe to news Letter?</label>
+            <input class="form-check-input" type="checkbox" id="subscribe" style="min-width: 10px !important;" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <input class="form-control" id="customer-id" name="customer-id" type="hidden" value="">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button id="btn-submit" type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
