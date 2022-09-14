@@ -4,7 +4,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Vidly.Models
 {
-  public class AppDbContext : IdentityDbContext <ApplicationUser>
+  public class AppDbContext : IdentityDbContext<ApplicationUser>
   {
         public AppDbContext() : base("Vidly")
         {
@@ -15,16 +15,13 @@ namespace Vidly.Models
 
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Movie> Movies { get; set; }
-        // public DbSet<Rental> Rentals { get; set; }
-        // public DbSet<RentalDetail> RentalDetails { get; set; }
-        
+        public DbSet<Rental> Rentals { get; set; }
+        public DbSet<RentalDetail> RentalDetails { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-          modelBuilder.Entity<IdentityRole>().ToTable("Roles");
-          modelBuilder.Entity<IdentityUser>().ToTable("Users");
-          modelBuilder.Entity<IdentityUserClaim>().ToTable("UserClaims");
-          modelBuilder.Entity<IdentityUserLogin>().ToTable("UserLogins");
-          modelBuilder.Entity<IdentityUserRole>().ToTable("UserRoles");
+          Database.SetInitializer<AppDbContext>(null);
+          base.OnModelCreating(modelBuilder);
         }
 
     public static AppDbContext Create()

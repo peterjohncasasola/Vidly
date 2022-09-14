@@ -6,130 +6,111 @@
 }
 
 <div class="row mb-2">
-    <div class="col-10">
-      <h2>Customers</h2>
-    </div>
-    <div class="col-2">
-      <!-- Button trigger modal -->
-      <button type="button" class="btn btn-primary" id="btn-show-modal">
+  <div class="col-10">
+    <h4>Customers List</h4>
+  </div>
+
+</div>
+<div class="row">
+  <div class="form-group row mb-3 ">
+    <div class="col-lg-2">
+      <button type="button" class="btn btn-primary btn-sm mb-sm-2" id="btn-show-modal">
         New Customer
       </button>
     </div>
-  </div>
-  <div class="row">
-    <div class="form-group row mb-3">
-      <div class="col-lg-2 col-sm-12">
-        <select class="form-select" id="filter-by">
-          <option value="">Search By</option>
-          <option value="name">Customer Name</option>
-          <option value="membershipType.name">Membership Type</option>
-          <option value="address">Address</option>
-        </select>
-      </div>
-      <div class="col-lg-3">
-        <div class="input-group">
-                <input type="text" class="form-control" id="input-search" placeholder="Search here...." aria-describedby="btn-search">
-                <button class="btn btn-primary" type="button" id="btn-search">Search</button>
-              </div>
+    <div class="col-lg-5"></div>
+    <div class="col-lg-2 col-sm-12 ">
+      <select class="form-select form-select-sm" id="filter-by">
+        <option value="">Search By</option>
+        <option value="name">Customer</option>
+        <option value="membershipType.name">Membership</option>
+        <option value="address">Address</option>
+      </select>
+    </div>
+    <div class="col-lg-3 gx-lg-0">
+      <div class="input-group input-group-sm ">
+        <input type="text" class="form-control form-control-sm" id="input-search" placeholder="Search here...." aria-describedby="btn-search">
+        <button class="btn btn-primary" type="button" id="btn-search">Search</button>
       </div>
     </div>
   </div>
-  
-  <!-- Modal -->
-  <div class="modal fade" id="modal-dialog" tabindex="-1" role="dialog"  aria-labelledby="modal-label" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen-sm-down modal-fullscreen-md-down" role="document">
-      <form id="modal-form">
-        <div class="modal-content">
-                <div class="modal-header">
-                  <h6 class="modal-title" id="modal-label">Modal title</h6>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="mb-3">
-                    <label for="customer-name" class="col-form-label">Name:</label>
-                    <input type="text" class="form-control" id="customer-name" name="customer-name">
-                  </div>
-                  <div class="mb-3">
-                    <label for="customer-address" class="col-form-label">Address:</label>
-                    <input type="text" class="form-control" id="customer-address" name="customer-address">
-                  </div>
-                  <div class="mb-3">
-                    <label for="membership-type" class="col-form-label">Membership</label>
-                    <select class="form-select" id="membership-type" name="membership-type">
-                      <option value="">Select Membership Type</option>
-                      <option value="1">Membership 1</option>
-                      <option value="2">Membership 2</option>
-                    </select>
-                  </div>
-                  <div class="mb-3">
-                    <label class="col-form-label" for="birthdate">Date of Birth</label>
-                    <input class="form-control" id="birthdate" name="birthdate" type="date" value="">
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <input class="form-control" id="customer-id" name="customer-id" type="hidden" value="">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button id="btn-submit" type="submit" class="btn btn-primary">Save changes</button>
-                </div>
-              </div>
-      </form>
-    </div>
-  </div>
-  
-  <nav>
-    <ul class="pagination justify-content-end" id="pagination-link">
-    </ul>
-  </nav>
-  <table class="table table-bordered table-hover overflow-hidden" id="customer-table">
-    <tr>
-      <th>
-        @Html.DisplayNameFor(model => model.Name)
-      </th>
-      <th >
-        @Html.DisplayNameFor(model => model.Address)
-      </th>
-      <th >
-        @Html.DisplayNameFor(model => model.BirthDate)
-      </th>
-      <th >
-        @Html.DisplayNameFor(model => model.MembershipType.Name)
-      </th>
-      <th ></th>
-    </tr>
-    <tbody id="customer-table-body"></tbody>
-  </table>
-  <!-- Toast -->
-  <div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
-    <div id="notification"  class="toast hide bg-success text-white" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="d-flex">
-        <div class="toast-body">Hello, world! This is a toast message.</div>
-        <button type="button" class="btn-close me-2 btn-close-white m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Delete Modal -->
-  <div class="modal fade" id="modal-delete-dialog" tabindex="-1" aria-labelledby="modal-delete-title" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modal-dialog" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen-sm-down modal-fullscreen-md-down" role="document">
+    <form id="modal-form" autocomplete="off">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="modal-delete-title">Delete Confirmation</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <h6 class="modal-title"  id="modal-label">Modal title</h6>
+          <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p class="text-black">Are you sure you want to delete?</p>
+          <div class="mb-1">
+            <label for="customer-name" class="col-form-label col-form-label-sm">Name:</label>
+            <input type="text" class="form-control form-control-sm" id="customer-name" name="name">
+          </div>
+          <div class="mb-1">
+            <label for="customer-address" class="col-form-label col-form-label-sm">Address:</label>
+            <input type="text" class="form-control form-control-sm" id="customer-address" name="address">
+          </div>
+          <div class="mb-1">
+            <label for="membership-type" class="col-form-label col-form-label-sm">Membership</label>
+            <select class="form-select form-select-sm" id="membership-type" name="membershipType">
+            </select>
+          </div>
+
+          <div class="mb-1">
+            <label class="col-form-label col-form-label-sm" for="birthdate">Date of Birth</label>
+            <input class="form-control form-control-sm" id="birthdate" name="birthdate" type="date" value="">
+          </div>
+          <div class="form-check my-2">
+            <label for="checkbox-subscribe" class="col-form-label-sm">Subscribe to Newsletter?</label>
+            <input class="form-check-input mt-2" id="checkbox-subscribe" name="isSubscribe" style="min-width: 10px !important;" type="checkbox" value="false">
+          </div>
         </div>
+
         <div class="modal-footer">
-          <input class="form-control" id="delete-id" name="customer-id" type="hidden" value=""/>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button id="btn-delete" type="submit" class="btn btn-danger">Delete</button>
+          <input class="form-control form-control-sm" id="customer-id" name="customer-id" type="hidden" value="">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+          <input id="btn-submit" type="submit" class="btn btn-primary btn-sm" value="Submit" style="min-width: 10px; !important;">
         </div>
       </div>
-    </div>
+    </form>
   </div>
+</div>
+
+<div class="table-responsive text-nowrap">
+  <table class="table table-sm table-bordered table-hover bstable" id="data-table">
+    <thead>
+      <tr>
+        <th>
+          @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.Address)
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.BirthDate)
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.MembershipType.Name)
+        </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="data-table-body"></tbody>
+  </table>
+</div>
+
+@Html.Partial("_PaginationLink")
+
+@Html.Partial("_Notification")
+
+@Html.Partial("_DeleteModal")
 
 
 @section Scripts {
-  <script  src="~/Scripts/Customs/customerAjax.js"></script>
+  <script type="module" defer crossorigin="use-credentials" src="~/Scripts/Customs/customerAjax.js"></script>
 }
 

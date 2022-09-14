@@ -39,10 +39,11 @@
 
 </table>
 @section scripts {
-  <script type="text/javascript">
+  <script type="module">
+    import { Helpers } from "../../Scripts/Customs/helpers.js";
     $(document).ready(function () {
     
-      $("#data-table")
+      let table = $("#data-table")
         .DataTable({
           pageLength: 10,
           recordsTotal: 10,
@@ -50,7 +51,7 @@
           searchDelay: 300,
           page: 0,
           ajax: function (data, callback, settings) {
-            let columns = ['Name', 'Genre', 'DateRelease', 'Stock'];
+            let columns = ['Name', 'Genre', 'DateRelease', 'Stock', 'MinimumRequiredAge'];
             const order = data.order[0];
 
             let params = {
@@ -64,7 +65,7 @@
             let search = data.search?.value;
 
             $.ajax({
-              url: `/api/movies?${setQueryParams(params)}`,
+              url: `/api/movies?${Helpers.setQueryParams(params)}`,
                 dataType: 'json',
                 type: 'GET',
                 success: function (data, textStatus, xhr) {
@@ -101,12 +102,33 @@
           {
             data: "id",
             render: function (data) {
-              return "<button class='btn btn-danger btn-sm js-delete' data-customer-id=" + data + ">Delete</button>";
+              return "<button class='btn btn-danger btn-sm .btn-delete' data-id=" + data + ">Delete</button>";
             }
           },
 
         ]
+        });
+
+
+      $("#data-table").on("click", ".btn-delete", function () {
+        var button = $(this);
+        bootbox.confirm("Are you sure you want to delete this movie?", function (result) {
+          if (result) {
+            $.ajax({
+              url: "/api/movies/" + button.attr("data-id"),
+              method: "DELETE",
+              success: function () {
+                toastr.success("Movie deleted successfully.");
+                table.row(button.parents("tr")).remove().draw();
+              },
+              error: function () {
+                toastr.error("Something unexpected happened.");
+              }
+            });
+          }
+        });
       });
+
     })
 
   

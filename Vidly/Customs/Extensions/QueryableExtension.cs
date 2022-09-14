@@ -68,7 +68,27 @@ namespace Vidly.Customs.Extensions
     {
       return entity.OrderBy(query.OrderBy, query.SortBy);
     }
-    
+
+    public static IQueryable<TEntity> Filter<TEntity>(this IQueryable<TEntity> entity,
+      QueryObject query)
+    {
+      return !string.IsNullOrEmpty(query.SearchBy) && !string.IsNullOrEmpty(query.Search)
+        ? entity.Where(query)
+        : entity;
+    }
+
+    public static PaginatedResult ToPaginate<TEntity>(this IQueryable<TEntity> entity,
+      QueryObject query)
+    {
+      var totalRecords = entity.Count();
+
+      entity = entity.SortBy(query).Paginate(query);
+
+      return ResponseHelper.ToPagedResponse(query, totalRecords, 
+        !string.IsNullOrEmpty(query.Fields.Trim()) 
+        ? entity.SelectColumns(query.Fields) : entity);
+    }
+
     public static IQueryable<TEntity> Paginate<TEntity>(this IQueryable<TEntity> entity, QueryObject query)
     {
       var lastPage = Convert.ToInt32(Math.Ceiling(((double)entity.Count() / (double)query.PageSize)));

@@ -17,7 +17,7 @@ namespace Vidly.Models.DTO
     public string Name { get; set; }
 
     [DateRange]
-    public DateTime? BirthDate { get; set; }
+    public DateTime BirthDate { get; set; }
 
     public string Address { get; set; }
     public bool IsSubscribedToNewsLetter { get; set; }

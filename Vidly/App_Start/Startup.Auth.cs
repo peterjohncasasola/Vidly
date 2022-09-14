@@ -4,7 +4,6 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using System;
-using Microsoft.Owin.Security.Google;
 using Vidly.Models;
 
 namespace Vidly
@@ -54,9 +53,9 @@ namespace Vidly
       //   consumerKey: "",
       //   consumerSecret: "");
 
-      //app.UseFacebookAuthentication(
-      //   appId: "601658185008847",
-      //   appSecret: "fd73969b7aabf49de8298723e819a51a");
+        app.UseFacebookAuthentication(
+         appId: "601658185008847",
+         appSecret: "fd73969b7aabf49de8298723e819a51a");
 
       // app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
       // {

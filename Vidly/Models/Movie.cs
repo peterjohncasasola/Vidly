@@ -22,6 +22,7 @@ namespace Vidly.Models
     public DateTime DateRelease { get; set; }
     [Required]
     public int Stock { get; set; }
+    public int MinimumRequiredAge { get; set; }
   }
 
   public enum Genre

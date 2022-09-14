@@ -45,12 +45,10 @@
     </form>
   </div>
   <div class="col-lg-8 mt-8">
-    <table class="table table-bordered table-hover overflow-hidden" id="customer-table">
+    <table class="table table-bordered table-hover overflow-hidden" id="data-table">
+      <thead>
       <tr>
-
-        <th>
-          Movie
-        </th>
+        <th>Movie</th>
         <th>
           Date Released
         </th>
@@ -58,7 +56,8 @@
           Genre
         </th>
         <th></th>
-      </tr>
+       </tr>
+      </thead>
       <tbody id="customer-table-body"></tbody>
     </table>
   </div>
@@ -79,6 +78,7 @@
       const index = vm.movieIds.findIndex(movieId => movieId == id);
       vm.movieIds.splice(index, 1);
     }
+    
 
 
 
@@ -193,15 +193,16 @@
             data: vm
           })
             .done(function () {
-              // toastr.success("Rentals successfully recorded.");
+              toastr.success("Rentals successfully recorded.");
               $("#customer").typeahead("val", "");
               $("#movie").typeahead("val", "");
               $("#movies").empty();
               vm = { movieIds: [] };
               validator.resetForm();
+              $("#data-table > tbody").empty();
             })
             .fail(function () {
-              // toastr.error("Something unexpected happened.");
+              toastr.error("Something unexpected happened.");
             });
           return false;
         }

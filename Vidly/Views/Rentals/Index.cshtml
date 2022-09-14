@@ -1,46 +1,94 @@
-﻿@model IEnumerable<Vidly.Models.RentalDetail>
+﻿@model IEnumerable<Vidly.Models.Customer>
 
 @{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+  ViewBag.Title = "Index";
+  Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Rented Movies</h2>
+<div class="row mb-2">
+  <div class="col-10">
+    <h4>Rentals</h4>
+  </div>
+</div>
+<div class="row">
+  <div class="form-group row mb-3">
+    <div class="col-lg-2 col-sm-12 pe-lg-1">
+      <select class="form-select form-select-sm" id="filter-by">
+        <option value="">Search By</option>
+        <option value="rental.customer.name">Customer</option>
+        <option value="movie.name">Movie</option>
+      </select>
+    </div>
+    <div class="col-lg-3 px-lg-1">
+      <input type="text" class="form-control form-control-sm" id="input-search" placeholder="Search here...." aria-describedby="btn-search">
+    </div>
+    <div class="col-lg-3 px-lg-1">
+          <div class="form-check">
+            <label for="input-status" class="col-form-label-sm">Include Returns</label>
+            <input class="form-check-input mt-2" id="input-status" name="isSubscribe" style="min-width: 10px !important;" type="checkbox" checked>
+          </div>
+        </div>
+  </div>
+</div>
 
-<p>
-    @Html.ActionLink("Create New", "New")
-</p>
-<table class="table table-bordered">
+<div class="row">
+  <div class="form-group row mb-3">
+    <div class="col-lg-2 col-sm-12 pe-lg-1">
+      <label class="col-form-label col-form-label-sm" for="filter-date-by">Filter Date By</label>
+      <select class="form-select form-select-sm" id="filter-date-by">
+        <option value=""></option>
+        <option value="rented">Date Rented</option>
+        <option value="movie.name">Date Returned</option>
+      </select>
+    </div>
+     <div class="col-lg-3 px-lg-1">
+       <label class="col-form-label col-form-label-sm" for="dateFrom">Date From</label>
+       <input class="form-control form-control-sm" id="dateFrom" name="dateFrom" type="date" value="">
+     </div>
+    <div class="col-lg-3 px-lg-1">
+      <label class="col-form-label col-form-label-sm" for="dateTo">Date To</label>
+      <input class="form-control form-control-sm" id="dateTo" name="dateTo" type="date" value="">
+    </div>
+    <div class="col-lg-3 px-lg-1 mt-lg-4">
+      <button class="btn btn-sm btn-primary mt-lg-2" type="button" id="btn-search" >
+        Search
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-sm table-bordered table-hover overflow-hidden" id="data-table">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Movie.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Rental.Customer.Name)
-        </th>
       <th>
-          Returned Date
-        </th>
-        <th></th>
+        Customer Name
+      </th>
+      <th>
+        Movie
+      </th>
+      <th>
+        Genre
+      </th>
+      <th>
+        Date Rented
+      </th>
+      <th>
+        Date Returned
+      </th>
+      <th></th>
     </tr>
+    <tbody id="rentals-table-body"></tbody>
+  </table>
+</div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Movie.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Rental.Customer.Name)
-        </td>
-      <td>
-            @Html.DisplayFor(modelItem => item.DateReturned)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
+@Html.Partial("_PaginationLink")
+
+@Html.Partial("_Notification")
+
+@Html.Partial("_DeleteModal")
+
+
+@section Scripts {
+  <script type="module" src="~/Scripts/Customs/rentals.js"></script>
 }
 
-</table>

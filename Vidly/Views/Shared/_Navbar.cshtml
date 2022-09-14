@@ -1,4 +1,4 @@
-﻿<div class="navbar navbar-fixed-top navbar-expand-lg navbar-dark bg-primary">
+﻿<div class="navbar navbar-fixed-top navbar-expand-lg navbar-dark bg-primary p-2">
   <div class="container">
     <div class="navbar-header">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -6,30 +6,35 @@
       </button>
     </div>
     <div class="collapse navbar-collapse">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">@Html.ActionLink("Vidly", "Index", "Home", new {}, new { @class= "nav-link active" })</li>
-        <li class="nav-item">
-          @Html.ActionLink("New Rental", "New", "Rentals", new { }, new { @class = "nav-link" })
-        </li>
-        <li class="nav-item">
-          @Html.ActionLink("Rentals", "Index", "Rentals", new { }, new { @class = "nav-link" })
-        </li>
-        <li class="nav-item">
-          @Html.ActionLink("Movies", "Index", "Movies", new { }, new { @class = "nav-link" })
-        </li>
-        <li class="nav-item">
-          @Html.ActionLink("Customers", "Index", "Customers", new { }, new { @class = "nav-link" })
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Create New </a>
-          <div class="dropdown-menu">
-            @Html.ActionLink("Customer", "New", "Customers", new { },
-              new { @class = "dropdown-item" })
-            <div class="dropdown-divider"></div>
-            @Html.ActionLink("Movies", "New", "Movies", new { }, new { @class = "dropdown-item" })
-          </div>
-        </li>
+     
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">@Html.ActionLink("Vidly", "Index", "Home", new { }, new { @class = "nav-link active" })</li>
+        @if (Request.IsAuthenticated)
+        {
+          <li class="nav-item">
+            @Html.ActionLink("New Rental", "New", "Rentals", new { }, new { @class = "nav-link" })
+          </li>
+          <li class="nav-item">
+            @Html.ActionLink("Rentals", "Index", "Rentals", new { }, new { @class = "nav-link" })
+          </li>
+          <li class="nav-item">
+            @Html.ActionLink("Movies", "Index", "Movies", new { }, new { @class = "nav-link" })
+          </li>
+          <li class="nav-item">
+            @Html.ActionLink("Customers", "Index", "Customers", new { }, new { @class = "nav-link" })
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Create New </a>
+            <div class="dropdown-menu">
+              @Html.ActionLink("Customer", "New", "Customers", new { },
+                new { @class = "dropdown-item" })
+              <div class="dropdown-divider"></div>
+              @Html.ActionLink("Movies", "New", "Movies", new { }, new { @class = "dropdown-item" })
+            </div>
+          </li>
+          }
         </ul>
+      @Html.Partial("_LoginPartial")
     </div>
   </div>
 </div>

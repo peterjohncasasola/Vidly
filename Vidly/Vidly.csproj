@@ -166,6 +166,9 @@
     <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.4.2.2\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin.Security.Google, Version=4.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Owin.Security.Google.4.2.2\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
     </Reference>
@@ -361,25 +364,25 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202209050903065_Initial.cs" />
-    <Compile Include="Migrations\202209050903065_Initial.Designer.cs">
-      <DependentUpon>202209050903065_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\202209130810127_InitialMigration.cs" />
+    <Compile Include="Migrations\202209130810127_InitialMigration.Designer.cs">
+      <DependentUpon>202209130810127_InitialMigration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202209050904255_DatabaseSeeder.cs" />
-    <Compile Include="Migrations\202209050904255_DatabaseSeeder.Designer.cs">
-      <DependentUpon>202209050904255_DatabaseSeeder.cs</DependentUpon>
+    <Compile Include="Migrations\202209130813091_MakeBirthDateNotNullableOfCustomer.cs" />
+    <Compile Include="Migrations\202209130813091_MakeBirthDateNotNullableOfCustomer.Designer.cs">
+      <DependentUpon>202209130813091_MakeBirthDateNotNullableOfCustomer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202209050908519_CreateRental.cs" />
-    <Compile Include="Migrations\202209050908519_CreateRental.Designer.cs">
-      <DependentUpon>202209050908519_CreateRental.cs</DependentUpon>
+    <Compile Include="Migrations\202209130818445_AddMinimumAgeToMovie.cs" />
+    <Compile Include="Migrations\202209130818445_AddMinimumAgeToMovie.Designer.cs">
+      <DependentUpon>202209130818445_AddMinimumAgeToMovie.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202209120736172_AddMinAgeToMovie.cs" />
-    <Compile Include="Migrations\202209120736172_AddMinAgeToMovie.Designer.cs">
-      <DependentUpon>202209120736172_AddMinAgeToMovie.cs</DependentUpon>
+    <Compile Include="Migrations\202209130820546_DatabaseSeeder.cs" />
+    <Compile Include="Migrations\202209130820546_DatabaseSeeder.Designer.cs">
+      <DependentUpon>202209130820546_DatabaseSeeder.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202209120755119_MakeBirthDateRequired.cs" />
-    <Compile Include="Migrations\202209120755119_MakeBirthDateRequired.Designer.cs">
-      <DependentUpon>202209120755119_MakeBirthDateRequired.cs</DependentUpon>
+    <Compile Include="Migrations\202209130839416_AddRental.cs" />
+    <Compile Include="Migrations\202209130839416_AddRental.Designer.cs">
+      <DependentUpon>202209130839416_AddRental.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Account.cs" />
@@ -580,6 +583,7 @@
     <Content Include="Content\DataTables\images\sort_desc.png" />
     <Content Include="Content\DataTables\images\sort_desc_disabled.png" />
     <Content Include="Content\DataTables\swf\flashExport.swf" />
+    <Content Include="Content\fontawesome.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -602,15 +606,14 @@
     <Content Include="obj\Debug\Vidly.csproj.GenerateResource.cache" />
     <Content Include="obj\x86\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
-    <Content Include="Scripts\Customs\Classes\Customer.js" />
-    <Content Include="Scripts\Customs\Classes\QueryObject.js" />
     <Content Include="Scripts\Customs\customerAjax.js" />
     <Content Include="Scripts\Customs\Models\customer.js" />
     <Content Include="Scripts\Customs\Models\queryObject.js" />
     <Content Include="Scripts\Customs\moviesAjax.js" />
     <Content Include="Scripts\Customs\rentals.js" />
     <Content Include="Scripts\Customs\ui.js" />
-    <Content Include="Scripts\Customs\utils.js" />
+    <Content Include="Scripts\Customs\UI\ui.js" />
+    <Content Include="Scripts\Customs\helpers.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap4.js" />
@@ -744,6 +747,9 @@
     <Content Include="Views\Account\VerifyCode.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_PaginationLink.cshtml" />
+    <Content Include="Views\Shared\_DeleteModal.cshtml" />
+    <Content Include="Views\Shared\_Notification.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -777,24 +783,21 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202209050903065_Initial.resx">
-      <DependentUpon>202209050903065_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202209130810127_InitialMigration.resx">
+      <DependentUpon>202209130810127_InitialMigration.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202209050904255_DatabaseSeeder.resx">
-      <DependentUpon>202209050904255_DatabaseSeeder.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202209130813091_MakeBirthDateNotNullableOfCustomer.resx">
+      <DependentUpon>202209130813091_MakeBirthDateNotNullableOfCustomer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202209050908519_CreateRental.resx">
-      <DependentUpon>202209050908519_CreateRental.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202209130818445_AddMinimumAgeToMovie.resx">
+      <DependentUpon>202209130818445_AddMinimumAgeToMovie.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202209120736172_AddMinAgeToMovie.resx">
-      <DependentUpon>202209120736172_AddMinAgeToMovie.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202209130820546_DatabaseSeeder.resx">
+      <DependentUpon>202209130820546_DatabaseSeeder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202209120755119_MakeBirthDateRequired.resx">
-      <DependentUpon>202209120755119_MakeBirthDateRequired.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202209130839416_AddRental.resx">
+      <DependentUpon>202209130839416_AddRental.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="obj\Debug\Vidly.Migrations.CreateRental.resources" />
-    <EmbeddedResource Include="obj\Debug\Vidly.Migrations.DatabaseSeeder.resources" />
-    <EmbeddedResource Include="obj\Debug\Vidly.Migrations.Initial.resources" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -813,7 +816,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>5000</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:5000/</IISUrl>
+          <IISUrl>https://localhost:44300/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

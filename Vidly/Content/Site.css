@@ -85,8 +85,29 @@ textarea {
 .field-validation-valid {
   color: rgb(231, 76, 60) !important;}
 
+.label-error {
+  color: rgb(231, 76, 60) !important;}
 
 
+table.table {
+  margin-bottom: 0;
+}
+
+.table-responsive {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.overlay-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -1rem;
+  margin-left: -1rem;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0);
+  /*dim the background*/
+}
 
 
 

@@ -1,5 +1,5 @@
-﻿import {QueryObject} from "./Classes/QueryObject.js";
-import { formatDate, setQueryParams } from './utils.js'
+﻿import {QueryObject} from "./Models/queryObject.js";
+import { Helpers } from './helpers.js'
 
 
 const form = document.querySelector("#modal-form");
@@ -147,7 +147,7 @@ function handleException(request, message, error) {
 
 function getMovies(params, onlyAvailable = false) {
   $.ajax({
-    url: `/api/customers?${setQueryParams(params)}&onlyAvailable=${onlyAvailable}`,
+    url: `/api/customers?${Helpers.setQueryParams(params)}&onlyAvailable=${onlyAvailable}`,
     type: 'GET',
     dataType: 'json',
     success: function ({meta,data}) {
@@ -160,104 +160,6 @@ function getMovies(params, onlyAvailable = false) {
     }
   });
 }
-
-function renderPaginationLink(pagination) {
-  const { totalPages, currentPage } = pagination;
-  let output = ``;
-  const lastPage = `
-      <li class="page-item">
-        <button onclick="paginate(${totalPages})" class="page-link">${totalPages}</button>
-        </li>
-      `;
-  const firstPage = `
-      <li class="page-item">
-        <button  onclick="paginate(${1})" class="page-link">1</button>
-        </li>
-      `;
-  const previousPage = `
-     <li class="page-item ${currentPage === 1 ? "disabled" : ""}">
-        <button onclick="paginate(${currentPage - 1})" class="page-link">Previous</button>
-        </li>
-      `;
-
-  const nextPage = `
-      <li class="page-item ${currentPage === totalPages ? "disabled" : ""}">
-        <button onclick="paginate(${currentPage + 1})" class="page-link">Next</button>
-        </li>
-      `;
-  
-  const disabledPage = `
-      <li class="page-item">
-        <button class="page-link disabled">...</button>
-        </li>
-      `;
-
-  if (totalPages > 4) {
-    if (currentPage < 5) {
-      output+= previousPage;
-      for (let i = 1; i <= 5; i++) {
-        output += `
-      <li class="page-item ${currentPage === i ? "active" : ""}">
-        <button onclick="paginate(${i})" class="page-link" id="btn-page-${i}">${i}</button>
-        </li>`;
-      }
-      output += disabledPage;
-      output += lastPage;
-      output += nextPage;
-    }
-    else  
-    {
-      const endLimit = totalPages - 5;
-      if (currentPage > endLimit) {
-        output+= previousPage;
-        output += firstPage;
-        output += disabledPage;
-        for (let i = endLimit; i <= totalPages; i++) {
-          output += `
-            <li class="page-item ${currentPage === i ? "active" : ""}" > 
-              <button onclick="paginate(${i})" class="page-link" >${i}</button>
-              </li>`;
-        }
-        output += nextPage;
-
-      }
-      else 
-      {
-        output+= previousPage;
-        output += firstPage;
-        output += disabledPage;
-        for (let i = currentPage -1; i <= currentPage + 1; i++) {
-            output += `
-            <li class="page-item ${currentPage === i ? "active" : ""}">
-              <button onclick="paginate(${i})" class="page-link"
-              >${i}</button>
-            </li>`;     
-        }
-        output += disabledPage;
-        output += lastPage;
-        output += nextPage;
-      }
-    }
-  }
-  else 
-  {
-    output+= previousPage;
-    for (let i = 1; i <= totalPages; i++) {
-      output += `
-      <li class="page-item ${currentPage === i ? "active" : ""}" >
-        <button onclick="paginate(${i})" class="page-link" >${i}</button>
-        </li>`;
-    }
-    output+=nextPage;
-  }
-  
-  document.querySelector('#pagination-link').innerHTML = output;
-}
-function paginate(page) {
-  queryParams.page = page;
-  getMovies(queryParams);
-}
-
 function customerListSuccess(products) {
   document.querySelector('#customer-table-body').innerHTML = '';
   // Iterate over the collection of data

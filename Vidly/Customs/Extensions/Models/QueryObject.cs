@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Vidly.Customs.Extensions.Models
 {
@@ -13,6 +14,12 @@ namespace Vidly.Customs.Extensions.Models
     public string Search { get; set; } = "";
     public string Comparison { get; set; } = "contains";
     public string Fields { get; set; } = "";
+  }
+
+  public class DateRange
+  {
+    public DateTime DateFrom { get; set; } = DateTime.Now;
+    public DateTime DateTo { get; set; } = DateTime.Now;
   }
 
 }

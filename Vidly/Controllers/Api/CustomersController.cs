@@ -57,16 +57,18 @@ namespace Vidly.Controllers.Api
       var customer = await DbContext.Customers.Include(q => q.MembershipType).FirstOrDefaultAsync(c => c.Id == id);
 
       if (id != customerDto.Id)
-      {
         return BadRequest();
-      }
-
+      
+      if (await CustomerExists(id, customerDto))
+        return BadRequest($"{customerDto.Name} is already exists");
+      
       if (customer != null)
       {
         customer.Name = customerDto.Name;
         customer.Address = customerDto.Address;
         customer.IsSubscribedToNewsLetter = customerDto.IsSubscribedToNewsLetter;
         customer.BirthDate = customerDto.BirthDate;
+        customer.MembershipTypeId = customerDto.MembershipTypeId;
 
         DbContext.Entry(customer).State = EntityState.Modified;
       }
@@ -92,16 +94,18 @@ namespace Vidly.Controllers.Api
     public async Task<IHttpActionResult> PostCustomer(CustomerDto customerDto)
     {
       if (!ModelState.IsValid)
-      {
         return BadRequest(ModelState);
-      }
+
+      if (await CustomerExists(customerDto))
+        return BadRequest($"{customerDto.Name} is already exists");
 
       var customer = new Customer()
       {
         BirthDate = customerDto.BirthDate,
         MembershipTypeId = customerDto.MembershipTypeId,
         Name = customerDto.Name,
-        Address = customerDto.Address
+        Address = customerDto.Address,
+        IsSubscribedToNewsLetter = customerDto.IsSubscribedToNewsLetter
       };
 
       DbContext.Customers.Add(customer);
@@ -135,9 +139,8 @@ namespace Vidly.Controllers.Api
       base.Dispose(disposing);
     }
 
-    private bool CustomerExists(int id)
-    {
-      return DbContext.Customers.Count(e => e.Id == id) > 0;
-    }
+    private bool CustomerExists(int id) => DbContext.Customers.Any(e => e.Id == id);
+    private async Task<bool> CustomerExists(CustomerDto customerDto) => await DbContext.Customers.AnyAsync(c => c.Name == customerDto.Name);
+    private async Task<bool> CustomerExists(int id, CustomerDto customerDto) => await DbContext.Customers.AnyAsync(c => c.Name == customerDto.Name & c.Id != id);
   }
 }

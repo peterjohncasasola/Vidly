@@ -8,16 +8,19 @@
   @Styles.Render("~/Content/css")
   @Scripts.Render("~/bundles/modernizr")
   @RenderSection("styles", false)
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" rel="stylesheet" type='text/css'>
+
 </head>
 <body>
 @Html.Partial("_Navbar")
-<div class="container body-content my-5">
+<div class="container body-content my-3">
   @RenderBody()
 </div>
-
+@Scripts.Render("~/bundles/lib")
 <script type="text/javascript" src="https://momentjs.com/downloads/moment.js"></script>
 <script type="text/javascript" src="https://bootswatch.com/_vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-@Scripts.Render("~/bundles/lib")
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.js"></script>
 @RenderSection("scripts", required: false)
 </body>
 </html>
