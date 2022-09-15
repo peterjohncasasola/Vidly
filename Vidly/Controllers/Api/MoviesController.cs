@@ -19,33 +19,17 @@ namespace Vidly.Controllers.Api
   {
     private readonly AppDbContext _db;
 
-    public MoviesController()
-    {
-      _db = new AppDbContext();
-    }
+    public MoviesController() => _db = new AppDbContext();
 
     // GET: api/Movies
     public async Task<IHttpActionResult> GetMovies([FromUri] QueryObject query, bool onlyAvailable = false)
     {
-      IQueryable data = null;
       var movies = _db.Movies.AsQueryable();
 
       if (onlyAvailable) movies = movies.Where(m => m.Stock > 0);
 
-      if (!string.IsNullOrEmpty(query.Search.Trim()) && !string.IsNullOrEmpty(query.SearchBy.Trim()))
-        movies = movies.Where(query);
-
-      var totalRecords = await movies.CountAsync();
-
-      movies = movies.SortBy(query).Paginate(query);
-
-      if (query.Page > 0)
-        movies = movies.Paginate(query);
-
-      if (!string.IsNullOrEmpty(query.Fields.Trim()))
-        data = movies.SelectColumns(query.Fields);
-
-      return Ok(ResponseHelper.ToPagedResponse(query, totalRecords, data ?? movies));
+      var result = await movies.Filter(query).ToPaginateAsync(query);
+      return Ok(result);
 
     }
 
@@ -84,13 +68,8 @@ namespace Vidly.Controllers.Api
       catch (DbUpdateConcurrencyException)
       {
         if (!MovieExists(id))
-        {
           return NotFound();
-        }
-        else
-        {
-          throw;
-        }
+        throw;
       }
 
       return StatusCode(HttpStatusCode.NoContent);
@@ -118,6 +97,9 @@ namespace Vidly.Controllers.Api
     [ResponseType(typeof(Movie))]
     public async Task<IHttpActionResult> DeleteMovie(int id)
     {
+      if (await HaveRented(id))
+        return BadRequest("Unable to delete. Movie has existing rental transaction");
+      
       var movie = await _db.Movies.FindAsync(id);
       if (movie == null)
       {
@@ -139,13 +121,10 @@ namespace Vidly.Controllers.Api
       base.Dispose(disposing);
     }
 
-    private bool MovieExists(int id)
-    {
-      return _db.Movies.Count(e => e.Id == id) > 0;
-    }
-    
-    private async Task<bool> MovieExists(Movie movie) => await _db.Customers.AnyAsync(m => m.Name == movie.Name);
+    private bool MovieExists(int id) => _db.Movies.Any(e => e.Id == id);
+    private async Task<bool> MovieExists(Movie movie) => await _db.Movies.AnyAsync(m => m.Name == movie.Name);
     private async Task<bool> MovieExists(int id, Movie movie) => await _db.Movies.AnyAsync(m => m.Name == movie.Name & m.Id != id);
+    private async Task<bool> HaveRented(int id) => await _db.RentalDetails.AnyAsync(m => m.Movie.Id == id && m.IsReturned == false);
 
   }
 }

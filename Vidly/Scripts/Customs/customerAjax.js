@@ -104,17 +104,6 @@ function saveCustomer(customer) {
     })
   }
  }
- 
-function appendToTable(customer) {
-
-  if ($("#data-table-tbody").length > 0) {
-  $("#data-table").append("<tbody></tbody>");
-    $("#data-table tbody").remove();
-  }
-
-  $("#data-table-tbody").append(
-    buildTableRow(customer));
-}
 
 function buildTableRow(customer) {
   return `
@@ -185,7 +174,6 @@ function getMembershipTypes() {
 function customerListSuccess(products) {
   document.querySelector('#data-table-body').innerHTML = '';
   UI.showLoading()
-  // Iterate over the collection of data
   $.each(products, function (index, product) {
     productAddRow(product);
   });
@@ -251,11 +239,10 @@ function formClear() {
 }
 
 function customerToFields(customer) {
-  console.log(customer);
   document.querySelector("#customer-name").value = customer.name;
   document.querySelector("#customer-address").value = customer.address;
   document.querySelector("#membership-type").value = customer.membershipTypeId;
-  document.querySelector("#birthdate").value = new Date(customer.birthDate).toISOString().slice(0, 10);
+  $("#birthdate").val(Helpers.formatDate(customer.birthDate, "L"));
   document.querySelector("#customer-id").value = customer.id;
   $("#checkbox-subscribe").prop('checked', customer.isSubscribedToNewsLetter);
 }

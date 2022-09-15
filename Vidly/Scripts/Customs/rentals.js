@@ -6,7 +6,7 @@ let currentPage = 1,
     filterQuery = new FilterQuery(currentPage, 15);
 
 let filter = {
-  includeReturned: true,
+  isReturned: true,
   filterDateBy: "",
   dateFrom: null,
   dateTo: null,
@@ -21,7 +21,8 @@ $(document).ready(function () {
 
 
 $("#input-status").on("change", function () {
-  filter.includeReturned = $(this).is(':checked');
+  filter.isReturned = $(this).is(':checked');
+  $("#label-status").text(filter.isReturned ? 'Showing Returned' : 'Showing For Returns');
  filterQuery.page = 1;
   getRentals(filterQuery);
  });
@@ -60,7 +61,7 @@ function saveRental(customer) {
         }, 5000)
       },
       error: function (request, message, error) {
-        handleException(request, message, error)
+        Helpers.handleException(request, message, error)
       }
     });
   }
@@ -68,10 +69,6 @@ function saveRental(customer) {
 
 
 
-function addCustomer(customer) {
-  appendToTable(customer);
-  formClear();
-}
 
 function appendToTable(customer) {
 

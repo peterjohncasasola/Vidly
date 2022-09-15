@@ -12,6 +12,7 @@ using Vidly.Customs.Extensions.Helpers;
 using Vidly.Customs.Extensions.Models;
 using WebGrease;
 using System.Linq.Dynamic.Core;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
@@ -87,6 +88,18 @@ namespace Vidly.Customs.Extensions
       return ResponseHelper.ToPagedResponse(query, totalRecords, 
         !string.IsNullOrEmpty(query.Fields.Trim()) 
         ? entity.SelectColumns(query.Fields) : entity);
+    }
+    
+    public static async Task<PaginatedResult> ToPaginateAsync<TEntity>(this IQueryable<TEntity> entity,
+      QueryObject query)
+    {
+      var totalRecords = await entity.CountAsync();
+      
+      entity = entity.SortBy(query).Paginate(query);
+
+      return ResponseHelper.ToPagedResponse(query, totalRecords, 
+        !string.IsNullOrEmpty(query.Fields.Trim()) 
+          ? entity.SelectColumns(query.Fields) : entity);
     }
 
     public static IQueryable<TEntity> Paginate<TEntity>(this IQueryable<TEntity> entity, QueryObject query)

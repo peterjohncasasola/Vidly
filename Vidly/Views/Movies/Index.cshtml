@@ -1,138 +1,125 @@
-﻿@using Vidly.Models
-@model IEnumerable<Vidly.Models.Movie>
+﻿@model IEnumerable<Vidly.Models.Movie>
 
 @{
   ViewBag.Title = "Index";
   Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2 class="py-2">Movies</h2>
-@section styles {
-  <style type="text/css">
-    .paginate_button {
-      padding: 10px !important;
-    }
+<div class="row mb-2">
+  <div class="col-10">
+    <h4>Movies</h4>
+  </div>
 
-  </style>
+</div>
+<div class="row">
+  <div class="form-group row mb-3 ">
+    <div class="col-lg-2">
+      <button type="button" class="btn btn-primary btn-sm mb-sm-2" id="btn-show-modal">
+        New Movie
+      </button>
+    </div>
+    <div class="col-lg-5"></div>
+    <div class="col-lg-2 col-sm-12 ">
+      <select class="form-select form-select-sm" id="filter-by">
+        <option value="">Search By</option>
+        <option value="name">Name</option>
+        <option value="genre">Genre</option>
+      </select>
+    </div>
+    <div class="col-lg-3 gx-lg-0">
+      <div class="input-group input-group-sm ">
+        <input type="text" class="form-control form-control-sm" id="input-search" placeholder="Search here...." aria-describedby="btn-search">
+        <button class="btn btn-primary" type="button" id="btn-search">Search</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modal-dialog" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen-sm-down modal-fullscreen-md-down" role="document">
+    <form id="modal-form" autocomplete="off">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6 class="modal-title"  id="modal-label">Modal title</h6>
+          <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-1">
+            <label for="movie-name" class="col-form-label col-form-label-sm">Name:</label>
+            <input type="text" class="form-control form-control-sm" id="movie-name" name="name">
+          </div>
+          <div class="mb-1">
+            <label for="movie-genre" class="col-form-label col-form-label-sm">Genre:</label>
+            <select class="form-select form-select-sm" id="movie-genre" name="genre">
+              <option value="">Select Genre</option>
+              <option value="Drama">Drama</option>
+              <option value="Comedy">Comedy</option>
+              <option value="Fantasy">Fantasy</option>
+              <option value="Romance">Romance</option>
+              <option value="Western">Western</option>
+              <option value="Thriller">Thriller</option>
+            </select>
+          </div>
+          
+          <div class="mb-1">
+            <label class="col-form-label col-form-label-sm" for="date-released">Date Released</label>
+            <input class="form-control form-control-sm" id="date-released" name="dateReleased" type="date" value="">
+          </div>
+          <div class="mb-1">
+            <label for="movie-stock" class="col-form-label col-form-label-sm">Stock:</label>
+            <input type="number" class="form-control form-control-sm" min="0" id="movie-stock" name="stock">
+          </div>
+           <div class="mb-1">
+               <label for="movie-min-age" class="col-form-label col-form-label-sm">Minimum Age:</label>
+               <input type="number" class="form-control form-control-sm" min="0" value="0" id="movie-min-age" name="minimumAge">
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <input class="form-control form-control-sm" id="movie-id" name="customer-id" type="hidden" value="">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+          <input id="btn-submit" type="submit" class="btn btn-primary btn-sm" value="Submit" style="min-width: 10px; !important;">
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="table-responsive text-nowrap">
+  <table class="table table-sm table-bordered table-hover" id="data-table">
+    <thead>
+      <tr>
+        <th>
+          @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.Genre)
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.DateRelease)
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.Stock)
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.MinimumRequiredAge)
+        </th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="data-table-body"></tbody>
+  </table>
+</div>
+
+@Html.Partial("_PaginationLink")
+
+@Html.Partial("_Notification")
+
+@Html.Partial("_DeleteModal")
+
+
+@section Scripts {
+  <script type="module" defer crossorigin="use-credentials" src="~/Scripts/Customs/moviesAjax.js"></script>
 }
-<p>
-  @Html.ActionLink("New Movie", "New", new { }, new { @class = "btn btn-primary" })
-</p>
-<table class="table table-bordered table-condensed" id="data-table">
-  <thead>
-    <tr>
-      <th>
-        Movie
-      </th>
-      <th>
-        Genre
-      </th>
-      <th>
-        Released Date
-      </th>
-      <th>
-        Available
-      </th>
-      <th></th>
-    </tr>
-  </thead>
-
-</table>
-@section scripts {
-  <script type="module">
-    import { Helpers } from "../../Scripts/Customs/helpers.js";
-    $(document).ready(function () {
-    
-      let table = $("#data-table")
-        .DataTable({
-          pageLength: 10,
-          recordsTotal: 10,
-          start: 1,
-          searchDelay: 300,
-          page: 0,
-          ajax: function (data, callback, settings) {
-            let columns = ['Name', 'Genre', 'DateRelease', 'Stock', 'MinimumRequiredAge'];
-            const order = data.order[0];
-
-            let params = {
-              page: (data.start / data.length) + 1,
-              pageSize: data.length,
-              searchBy: 'Name',
-              search: data.search?.value,
-              orderBy: columns[order.column],
-              sortBy: columns[order.dir],
-            }
-            let search = data.search?.value;
-
-            $.ajax({
-              url: `/api/movies?${Helpers.setQueryParams(params)}`,
-                dataType: 'json',
-                type: 'GET',
-                success: function (data, textStatus, xhr) {
-                  callback({  
-                    data: data.data,                      
-                    recordsTotal: data.meta.totalItems,
-                    recordsFiltered: data.meta.totalItems,
-                    start: data.meta.from,
-                    end: data.meta.to,
-                    page: data.meta.currentPage + 1,
-                  });
-              }
-            });
-          },
-        processing: true,
-          serverSide: true,
-        info: true,
-        columns: [
-          {
-            data: "name",
-          },
-          {
-            data: "genre",
-          },
-          {
-            data: "dateRelease",
-            render: function (data) {
-              return new moment(data).format("MM/DD/yyyy");
-            }
-          },
-          {
-            data: "stock",
-          },
-          {
-            data: "id",
-            render: function (data) {
-              return "<button class='btn btn-danger btn-sm .btn-delete' data-id=" + data + ">Delete</button>";
-            }
-          },
-
-        ]
-        });
-
-
-      $("#data-table").on("click", ".btn-delete", function () {
-        var button = $(this);
-        bootbox.confirm("Are you sure you want to delete this movie?", function (result) {
-          if (result) {
-            $.ajax({
-              url: "/api/movies/" + button.attr("data-id"),
-              method: "DELETE",
-              success: function () {
-                toastr.success("Movie deleted successfully.");
-                table.row(button.parents("tr")).remove().draw();
-              },
-              error: function () {
-                toastr.error("Something unexpected happened.");
-              }
-            });
-          }
-        });
-      });
-
-    })
-
-  
-  </script>
-}
-
 

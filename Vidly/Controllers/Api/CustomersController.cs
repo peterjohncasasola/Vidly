@@ -22,20 +22,12 @@ namespace Vidly.Controllers.Api
     [HttpGet()]
     public async Task<IHttpActionResult> GetCustomers([FromUri] QueryObject query)
     {
-      IQueryable data = null;
-      var customers = DbContext.Customers.Include(c => c.MembershipType).AsQueryable();
-      
-     if (!string.IsNullOrEmpty(query.Search.Trim()) && !string.IsNullOrEmpty(query.SearchBy.Trim())) 
-       customers = customers.Where(query);
-     
-     var totalRecords = await customers.CountAsync();
-     
-      customers = customers.SortBy(query).Paginate(query);
-     
-     if (!string.IsNullOrEmpty(query.Fields.Trim()))
-       data = customers.SelectColumns(query.Fields);
 
-     return Ok(ResponseHelper.ToPagedResponse(query, totalRecords, data ?? customers));
+       var customers = DbContext.Customers.Include(c => c.MembershipType).AsQueryable();
+       
+       var result = await customers.Filter(query).ToPaginateAsync(query);
+       
+       return Ok(result);
 
     }
 
@@ -119,6 +111,9 @@ namespace Vidly.Controllers.Api
     [HttpDelete]
     public async Task<IHttpActionResult> DeleteCustomer(int id)
     {
+      if (await HasRentals(id))
+        return BadRequest("Unable to delete. Has existing rental transactions");
+      
       var customer = await DbContext.Customers.FindAsync(id);
       if (customer == null)
         return NotFound();
@@ -142,5 +137,7 @@ namespace Vidly.Controllers.Api
     private bool CustomerExists(int id) => DbContext.Customers.Any(e => e.Id == id);
     private async Task<bool> CustomerExists(CustomerDto customerDto) => await DbContext.Customers.AnyAsync(c => c.Name == customerDto.Name);
     private async Task<bool> CustomerExists(int id, CustomerDto customerDto) => await DbContext.Customers.AnyAsync(c => c.Name == customerDto.Name & c.Id != id);
+    private async Task<bool> HasRentals(int id) => await DbContext.RentalDetails.AnyAsync(c => c.Rental.CustomerId == id && c.IsReturned == false);
+
   }
 }

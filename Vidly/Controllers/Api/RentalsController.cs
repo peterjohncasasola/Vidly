@@ -20,31 +20,24 @@ namespace Vidly.Controllers.Api
     public IHttpActionResult GetRentals([FromUri]   
       QueryObject query,
       [FromUri] DateRange dateRange,
-      bool includeReturned = false, string filterDateBy = ""
+      bool isReturned = false, string filterDateBy = ""
       )
     {
       var rentals = _db.RentalDetails.Include(r => r.Movie)
         .Include(r => r.Rental)
         .Include(r => r.Rental.Customer);
-
+      
+      rentals = rentals.Where(r => r.IsReturned == isReturned);
+      
       if (!string.IsNullOrEmpty(filterDateBy.Trim()))
       {
         var dateTo = dateRange.DateTo.AddDays(1);
-        switch (filterDateBy.ToUpper().Trim())
+        rentals = filterDateBy.ToUpper().Trim() switch
         {
-          case "RETURNED":
-            rentals = rentals.Where(q => q.DateReturned >= dateRange.DateFrom && q.DateReturned <= dateTo);
-            break;
-          case "RENTED":
-            rentals = rentals.Where(q => q.Rental.DateRented >= dateRange.DateFrom && q.Rental.DateRented <= dateTo);
-            break;
-          default:
-            rentals = rentals;
-            break;
-        }
-        
-        if (!includeReturned)
-          rentals = rentals.Where(r => r.IsReturned == false);
+          "RETURNED" => rentals.Where(q => q.DateReturned >= dateRange.DateFrom && q.DateReturned <= dateTo),
+          "RENTED" => rentals.Where(q => q.Rental.DateRented >= dateRange.DateFrom && q.Rental.DateRented <= dateTo),
+          _ => rentals
+        };
       }
 
       var result = rentals.Filter(query).ToPaginate(query);
@@ -56,9 +49,7 @@ namespace Vidly.Controllers.Api
       var rental = await _db.Rentals.FindAsync(id);
 
       if (rental == null)
-      {
         return NotFound();
-      }
 
       return Ok(rental);
     }

@@ -22,6 +22,7 @@ namespace Vidly.Models
     public DateTime DateRelease { get; set; }
     [Required]
     public int Stock { get; set; }
+    [Display(Name = "Minimum Age")]
     public int MinimumRequiredAge { get; set; }
   }
 
