@@ -1,0 +1,63 @@
+﻿@model Vidly.Models.Rental
+
+<!-- Modal -->
+<div class="modal" id="new-rental-modal-dialog" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+  <div class="modal-dialog  modal-dialog-scrollable modal-fullscreen-xl-down modal-fullscreen-sm-down" role="document">
+    <div class="modal-content">
+      <div class="modal-header py-2">
+        <h6 class="modal-title fs-5">New Rental</h6>
+        <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-1">
+        <div class="mt-2">
+          <form id="newRental">
+            <div class="form-group">
+              <label class="form-label mt-3">Customer</label>
+              <div class="tt-container col-lg-12">
+                <input id="customer" name="customer" data-rule-validCustomer="true" required type="text" value="" class="form-control" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label mt-3">Movie</label>
+              <div class="tt-container col-lg-12">
+                <input id="movie" name="movie" data-rule-atLeastOneMovie="true" type="text" value="" class="form-control" />
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4 col-sm-4">
+                <ul id="movies" class="list-group"></ul>
+              </div>
+            </div>
+           
+          </form>
+          <div class="mb-1 mt-2">
+            <div class="table-responsive overflow-hidden">
+              <table class="table table-responsive table-sm table-bordered table-hover overflow-hidden" id="movie-rental-data-table">
+                <thead>
+                <tr>
+                  <th>Movie</th>
+                  <th>
+                    Date Released
+                  </th>
+                  <th>
+                    Genre
+                  </th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody id="movie-rental-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary mt-3">Submit</button>
+          </div>
+        </div>
+      </div>
+      
+     
+    </div>
+  </div>
+</div>

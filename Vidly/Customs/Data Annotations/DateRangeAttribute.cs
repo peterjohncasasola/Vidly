@@ -7,7 +7,7 @@ namespace Vidly.Customs.Data_Annotations
   public class DateRangeAttribute : ValidationAttribute
   {
     private DateTime Minimum { get; }
-    public DateTime Maximum { get; }
+    private DateTime Maximum { get; }
 
     public DateRangeAttribute(string minimum = null, string maximum = null, string format = null)
       : base($@"{{0}} is invalid")

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.Spatial;
+using Vidly.Customs.Extensions.Models;
 
 namespace Vidly.Models
 {
@@ -9,7 +11,7 @@ namespace Vidly.Models
     {
         public Rental()
         {
-            RentalDetails = new List<RentalDetail>();
+          RentalDetails = new List<RentalDetail>();
         }
         public int Id { get; set; }
         
@@ -18,7 +20,10 @@ namespace Vidly.Models
         public Customer Customer { get; set; }
         public DateTime DateRented { get; set; }
         public ICollection<RentalDetail> RentalDetails { get; set; }
+        [Required]
+        public string RentalCode { get; set; }
 
-
+        public bool? IsCompleted { get; set; }
+        public DateTime? DateCompleted { get; set; }
     }
 }

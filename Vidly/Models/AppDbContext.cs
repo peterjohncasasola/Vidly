@@ -1,6 +1,6 @@
-﻿using System;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Vidly.EntityConfigurations;
 
 namespace Vidly.Models
 {
@@ -8,7 +8,7 @@ namespace Vidly.Models
   {
         public AppDbContext() : base("Vidly")
         {
-            this.Configuration.LazyLoadingEnabled = false;
+          Configuration.LazyLoadingEnabled = false;
         }
         
         public DbSet<MembershipType> MembershipTypes { get; set; }
@@ -21,13 +21,19 @@ namespace Vidly.Models
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
           Database.SetInitializer<AppDbContext>(null);
+
+          modelBuilder.Entity<MovieGenre>().HasKey(t => new { t.Id });
+
+          modelBuilder.Configurations.Add(new CustomerConfiguration());
+          modelBuilder.Configurations.Add(new MovieConfiguration());
+          
+          modelBuilder.Configurations.Add(new RentalConfiguration());
+          modelBuilder.Configurations.Add(new RentalDetailConfiguration());
+
           base.OnModelCreating(modelBuilder);
         }
 
-    public static AppDbContext Create()
-    {
-      return new AppDbContext();
-    }
+    public static AppDbContext Create() => new AppDbContext();
   }
   
       

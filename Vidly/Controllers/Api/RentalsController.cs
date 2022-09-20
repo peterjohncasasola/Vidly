@@ -1,133 +1,208 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Routing;
 using Vidly.Customs.Extensions;
+using Vidly.Customs.Extensions.Helpers;
 using Vidly.Customs.Extensions.Models;
 using Vidly.Models;
 using Vidly.Models.DTO;
 
 namespace Vidly.Controllers.Api
 {
+  [RoutePrefix("api/rentals")]
   public class RentalsController : ApiController
   {
     private readonly AppDbContext _db = new();
     
     [HttpGet]
-    public IHttpActionResult GetRentals([FromUri]   
+    public async Task<IHttpActionResult> GetRentals([FromUri]   
       QueryObject query,
       [FromUri] DateRange dateRange,
-      bool isReturned = false, string filterDateBy = ""
+      bool isCompleted = false, string filterDateBy = ""
       )
     {
-      var rentals = _db.RentalDetails.Include(r => r.Movie)
-        .Include(r => r.Rental)
-        .Include(r => r.Rental.Customer);
-      
-      rentals = rentals.Where(r => r.IsReturned == isReturned);
-      
+      var rentals = _db.Rentals.Include(r => r.Customer);
+
+      rentals = rentals.Where(r => r.IsCompleted == isCompleted);
+
       if (!string.IsNullOrEmpty(filterDateBy.Trim()))
       {
         var dateTo = dateRange.DateTo.AddDays(1);
+        
         rentals = filterDateBy.ToUpper().Trim() switch
         {
-          "RETURNED" => rentals.Where(q => q.DateReturned >= dateRange.DateFrom && q.DateReturned <= dateTo),
-          "RENTED" => rentals.Where(q => q.Rental.DateRented >= dateRange.DateFrom && q.Rental.DateRented <= dateTo),
+          
+          "COMPLETED" => rentals.Where(q => q.DateCompleted >= dateRange.DateFrom 
+                                            && q.DateCompleted <= dateTo),
+
+          "RENTED" => rentals.Where(q => q.DateRented >= dateRange.DateFrom 
+                                         && q.DateRented <= dateTo),
           _ => rentals
         };
       }
 
-      var result = rentals.Filter(query).ToPaginate(query);
+      var result = await rentals.Filter(query).ToPaginateAsync(query);
       
       return Ok(result);
     }
-    public async Task<IHttpActionResult> GetRental(int id)
+
+    #region GetRentalById
+    [Route("{id}")]
+    [HttpGet]
+    public async Task<IHttpActionResult> GetRentalById(int id)
     {
-      var rental = await _db.Rentals.FindAsync(id);
+      try
+      {
+        var rental = await _db.Rentals
+          .Include(t => t.Customer)
+          .SingleAsync(t => t.Id == id);
 
-      if (rental == null)
-        return NotFound();
+        if (rental == null)
+          return NotFound();
 
-      return Ok(rental);
+        await _db.RentalDetails
+          .Where(r => r.RentalId == rental.Id)
+          .Include(t => t.Movie)
+          .LoadAsync();
+
+        return Ok(rental);
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine(e);
+        throw;
+      }
     }
 
+
+    #endregion
+
+    [HttpPost]
     public async Task<IHttpActionResult> PostRental(NewRentalDto rentalDto)
     {
       if (!ModelState.IsValid)
         return BadRequest(ModelState);
 
-      var rental = new Rental()
-      {
-        CustomerId = rentalDto.CustomerId,
-        DateRented = DateTime.Now,
-      };
-
-      var customer = await _db.Customers.FindAsync(rentalDto.CustomerId);
-      if (customer == null)
-        return BadRequest("Customer not found");
-
-      var movies = await _db.Movies.Where(m => rentalDto.MovieIds.Contains(m.Id) && m.Stock > 0).ToListAsync();
-      var rentalDetails = new List<RentalDetail>();
-
-      if (movies.Count == 0) return BadRequest("Movies are not available");
-
-      _db.Rentals.Add(rental);
-
-      foreach (var movie in movies)
-      {
-        if (movie.Stock == 0)
-          return BadRequest($"{movie.Name} is not available");
-
-        if (movie.MinimumRequiredAge > customer.Age)
-          return BadRequest($"{customer.Name} does not meet the required age of movie {movie.Name}");
-
-        movie.Stock--;
-        var rentedMovie = new RentalDetail()
-        {
-          Movie = movie,
-          Rental = rental
-        };
-        
-        rentalDetails.Add(rentedMovie);
-      }
-    
-
-      _db.RentalDetails.AddRange(rentalDetails);
-
-      await _db.SaveChangesAsync();
-
-      return Ok(rentalDetails);
-    }
-
-    [Route("api/rentals/details/{id}")]
-    [HttpPut]
-    public async Task<IHttpActionResult> PutRental(int id)
-    {
-      if (!ModelState.IsValid) return BadRequest(ModelState);
-      var rentalDetail = await _db.RentalDetails.FindAsync(id);
-
       try
       {
+        
+        var customer = await _db.Customers.FindAsync(rentalDto.CustomerId);
+        if (customer == null)
+          return BadRequest("Customer not found");
 
-        if (rentalDetail != null)
+        var movies = await _db.Movies.Where(m => rentalDto.MovieIds.Contains(m.Id)).ToListAsync();
+        var rentalDetails = new List<RentalDetail>();
+
+        if (movies.Count == 0) return BadRequest("Please add at least 1 movie");
+
+        var rentalCode = await EfHelper.GenerateTransactionCode("RTL", "rentals", "intRentalId");
+        var rental = new Rental()
         {
-          rentalDetail.DateReturned = DateTime.Now;
-          rentalDetail.IsReturned = true;
-          var rentedMovie = await _db.Movies.FindAsync(rentalDetail.MovieId);
-          if (rentedMovie != null) rentedMovie.Stock++;
+          RentalCode = rentalCode,
+          CustomerId = rentalDto.CustomerId,
+          DateRented = DateTime.Now,
+          IsCompleted = false,
+        };
+
+        foreach (var movie in movies)
+        {
+          if (movie.Stock == 0)
+            return BadRequest($"{movie.Name}- ({movie.Genre}) is not available");
+
+          if (movie.MinimumRequiredAge > customer.Age)
+            return BadRequest($"{customer.Name} does not meet the required age of movie {movie.Name}");
+
+          movie.Stock--;
+          
+          var rentedMovie = new RentalDetail()
+          {
+            Movie = movie,
+            Rental = rental
+          };
+
+          rentalDetails.Add(rentedMovie);
         }
+
+        _db.RentalDetails.AddRange(rentalDetails);
+
         await _db.SaveChangesAsync();
+
+
+
+        return Ok(rentalDetails);
+
+      }
+      catch (Exception e)
+      {
+        throw new Exception(e.Message);
+      }
+      
+    }
+
+    [Route("{id}")]
+    [HttpPut]
+    public async Task<IHttpActionResult> PutRental(int id, RentalDetailDto rentalDetailDto)
+    {
+      if (!ModelState.IsValid) return BadRequest(ModelState);
+
+      var rental = await _db.Rentals.FindAsync(id);
+      if (rental == null)
+        return NotFound();
+      
+      try
+      {
+        _db.Configuration.AutoDetectChangesEnabled = false;
+
+        foreach (var entity in 
+                 rentalDetailDto
+                   .RentalDetailIds
+                   .Select(rentalDetailId => new RentalDetail()
+                   {
+                     Id = rentalDetailId,
+                     DateReturned = DateTime.Now,
+                     IsReturned = true,
+                   }))  
+        {
+          _db.RentalDetails.Attach(entity);
+          _db.Entry(entity).Property(e => e.IsReturned).IsModified = true;
+          _db.Entry(entity).Property(e => e.DateReturned).IsModified = true;
+        }
+
+
+        await _db.SaveChangesAsync();
+
+        
       }
       catch (DbUpdateConcurrencyException)
       {
-          return NotFound();
+        return NotFound();
+      }
+      finally
+      {
+        _db.Configuration.AutoDetectChangesEnabled = true;
       }
 
-      return Ok(rentalDetail);
+      var isNotCompleted = await _db.RentalDetails
+        .AnyAsync(q => q.IsReturned == false && q.RentalId == id);
+
+      if (!isNotCompleted)
+      {
+        rental.IsCompleted = true;
+        rental.DateCompleted = DateTime.Now;
+      }
+
+      await _db.SaveChangesAsync();
+
+      return Ok(rental);
     }
+
 
     protected override void Dispose(bool disposing)
     {

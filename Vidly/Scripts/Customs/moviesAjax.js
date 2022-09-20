@@ -1,7 +1,7 @@
 ﻿
 import { QueryObject as FilterQuery } from './Models/queryObject.js';
 import { Movie } from './Models/movie.js';
-import { UI } from './UI/ui.js';
+import { UIHelper } from './UI/ui.js';
 import {Helpers} from "./helpers.js";
 
 const form = document.querySelector("#modal-form");
@@ -12,8 +12,8 @@ let filterQuery = new FilterQuery(currentPage, 10);
 
 
 $(document).ready(function () {
-  UI.loadEvents(filterQuery, getMovies);
-  UI.showModalOnEdit(getCustomer);
+  UIHelper.loadEventHandler(filterQuery, getMovies);
+  UIHelper.showModalOnEdit(getMovie);
 
   $("#modal-form").validate({
     errorClass: "label-error",
@@ -119,17 +119,6 @@ function saveMovie(movie) {
   }
 }
 
-function appendToTable(movie) {
-
-  if ($("#data-table-tbody").length > 0) {
-    $("#data-table").append("<tbody></tbody>");
-    $("#data-table tbody").remove();
-  }
-
-  $("#data-table-tbody").append(
-      buildTableRow(movie));
-}
-
 function buildTableRow(movie) {
   return `
     <tr>
@@ -165,7 +154,7 @@ function getMovies() {
     dataType: 'json',
     success: function ({meta,data}) {
       filterQuery.page = meta.currentPage;
-      UI.renderPaginationLink(meta);
+      UIHelper.renderPaginationLink(meta);
       customerListSuccess(data);
     },
     error: function (request, message, error) {
@@ -178,16 +167,16 @@ function getMovies() {
 
 function customerListSuccess(products) {
   document.querySelector('#data-table-body').innerHTML = '';
-  UI.showLoading()
+  UIHelper.showLoading()
   // Iterate over the collection of data
   $.each(products, function (index, product) {
     productAddRow(product);
   });
 
-  setTimeout(() => UI.hideLoading(), 500);
+  setTimeout(() => UIHelper.hideLoading(), 500);
 }
 
-function getCustomer(id) {
+function getMovie(id) {
   $("#movie-id").val(id);
   $("#btn-submit").val('Update');
 

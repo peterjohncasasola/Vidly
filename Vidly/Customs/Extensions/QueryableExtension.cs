@@ -22,18 +22,6 @@ namespace Vidly.Customs.Extensions
   public static class QueryableExtension
   {
     private static readonly MethodInfo Contains = typeof(string).GetMethod("Contains");
-    public static IQueryable<TEntity> SortBy<TEntity>(this IQueryable<TEntity> entity,
-      QueryObject query, Dictionary<string, Expression<Func<TEntity, object>>> columnsMap)
-    {
-      if (!string.IsNullOrWhiteSpace(query.SortBy) && columnsMap.ContainsKey(query.SortBy))
-      {
-        return query.OrderBy.ToLower() == "asc"
-          ? entity.OrderBy(columnsMap[query.SortBy])
-          : entity.OrderByDescending(columnsMap[query.SortBy]);
-      }
-      return entity;
-    }
-
     private static IOrderedQueryable<TEntity> OrderBy<TEntity>(this IQueryable<TEntity> entity,
       string propertyName, string orderBy = "desc")
     {
@@ -77,19 +65,6 @@ namespace Vidly.Customs.Extensions
         ? entity.Where(query)
         : entity;
     }
-
-    public static PaginatedResult ToPaginate<TEntity>(this IQueryable<TEntity> entity,
-      QueryObject query)
-    {
-      var totalRecords = entity.Count();
-
-      entity = entity.SortBy(query).Paginate(query);
-
-      return ResponseHelper.ToPagedResponse(query, totalRecords, 
-        !string.IsNullOrEmpty(query.Fields.Trim()) 
-        ? entity.SelectColumns(query.Fields) : entity);
-    }
-    
     public static async Task<PaginatedResult> ToPaginateAsync<TEntity>(this IQueryable<TEntity> entity,
       QueryObject query)
     {
@@ -99,7 +74,8 @@ namespace Vidly.Customs.Extensions
 
       return ResponseHelper.ToPagedResponse(query, totalRecords, 
         !string.IsNullOrEmpty(query.Fields.Trim()) 
-          ? entity.SelectColumns(query.Fields) : entity);
+          ? await entity.SelectColumns(query.Fields).AsNoTracking().ToListAsync() 
+          : await entity.AsNoTracking().ToListAsync());
     }
 
     public static IQueryable<TEntity> Paginate<TEntity>(this IQueryable<TEntity> entity, QueryObject query)
@@ -107,7 +83,7 @@ namespace Vidly.Customs.Extensions
       var lastPage = Convert.ToInt32(Math.Ceiling(((double)entity.Count() / (double)query.PageSize)));
       var currentPage = query.Page;
 
-      if (query.Page <=0)
+      if (query.Page <= 0)
         return entity;
 
       if (currentPage > lastPage)
@@ -125,7 +101,6 @@ namespace Vidly.Customs.Extensions
       return entity.Skip((query.Page - 1) * query.PageSize).Take(query.PageSize);
 
     }
-
     public static IQueryable<TEntity> WhereNotIn<TEntity, TValue>(
         this IQueryable<TEntity> queryable,
         Expression<Func<TEntity, TValue>> valueSelector,
@@ -159,26 +134,11 @@ namespace Vidly.Customs.Extensions
     {
       return entity.Where(BuildPredicate<TEntity>(query.SearchBy, query.Comparison, query.Search));
     }
-    
-    public static IQueryable<TEntity> WhereContains<TEntity>(this IQueryable<TEntity> entity, QueryObject query)
-    {
-      return entity.Where(GetFilter<TEntity>(query.SearchBy, query.Search));
-    }
-    
     public static IQueryable SelectColumns(this IQueryable entity, string columns)
     {
       var strColumns = "new { " + columns + " }";
       return entity.Select(strColumns);
     }
-    
-    // public static IQueryable<T> Select<T>(
-    //   this IQueryable source,
-    //   string selector,
-    //   params object[] args)
-    // {
-    //   return source.Select(ParsingConfig.Default, selector, args);
-    // }
-    
     public static IQueryable<TEntity> Where<TEntity>(this IQueryable<TEntity> entity, string field, string condition, string value)
     {
       return entity.Where(BuildPredicate<TEntity>(field, condition, value));
@@ -193,7 +153,6 @@ namespace Vidly.Customs.Extensions
       var body = MakeComparison(left, comparison, value);
       return Expression.Lambda<Func<T, bool>>(body, item);
     }
-
     private static Expression MakeComparison(Expression left, string comparison, string value)
     {
       switch (comparison.ToLower())
@@ -218,9 +177,6 @@ namespace Vidly.Customs.Extensions
           throw new NotSupportedException($"Invalid comparison operator '{comparison}'.");
       }
     }
-    
-   
-    
     private static Expression<Func<T, bool>> GetFilter<T>(string propertyName, string value)
     {
       var item = Expression.Parameter(typeof(T), "item");
@@ -274,190 +230,6 @@ namespace Vidly.Customs.Extensions
     private static object Private(this object obj, string privateField) => obj?.GetType().GetField(privateField, BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(obj);
     private static T Private<T>(this object obj, string privateField) => (T)obj?.GetType().GetField(privateField, BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(obj);
 
-    
-    
-    // public static IQueryable SelectDynamic(this IQueryable source, IEnumerable<string> fieldNames)
-    // {
-    //   var sourceProperties = fieldNames.ToDictionary(name => name, name => source.ElementType.GetProperty(name));
-    //   var dynamicType = LinqRuntimeTypeBuilder.GetDynamicType(sourceProperties.Values);
-    //
-    //   var sourceItem = Expression.Parameter(source.ElementType, "t");
-    //   var bindings = dynamicType.GetFields().Select(p => Expression.Bind(p, Expression.Property(sourceItem, sourceProperties[p.Name]))).OfType<MemberBinding>();
-    //
-    //   Expression selector = Expression.Lambda(Expression.MemberInit(
-    //     Expression.New(dynamicType.GetConstructor(Type.EmptyTypes)!), bindings), sourceItem);
-    //
-    //   return source.Provider.CreateQuery(Expression.Call(typeof(Queryable), "Select", new Type[] { source.ElementType, dynamicType },
-    //     source.Expression, selector));
-    // }
-    //
-    // private static class LinqRuntimeTypeBuilder
-    // {
-    //   private static readonly ILog Log =
-    //     log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType);
-    //   private static readonly AssemblyName AssemblyName = new AssemblyName() { Name = "DynamicLinqTypes" };
-    //   private static readonly ModuleBuilder ModuleBuilder = null;
-    //   private static readonly Dictionary<string, Type> BuiltTypes = new Dictionary<string, Type>();
-    //
-    // static LinqRuntimeTypeBuilder()
-    // {
-    //   ModuleBuilder = Thread.GetDomain().DefineDynamicAssembly(AssemblyName, AssemblyBuilderAccess.Run).DefineDynamicModule(AssemblyName.Name);
-    // }
-    //
-    // private static string GetTypeKey(Dictionary<string, Type> fields)
-    // {
-    //     var key = string.Empty;
-    //     foreach (var field in fields)
-    //         key += field.Key + ";" + field.Value.Name + ";";
-    //
-    //     return key;
-    // }
-    //
-    // private static Type GetDynamicType(Dictionary<string, Type> fields)
-    // {
-    //     if (null == fields)
-    //         throw new ArgumentNullException(nameof(fields));
-    //     if (0 == fields.Count)
-    //         throw new ArgumentOutOfRangeException(nameof(fields), @"fields must have at least 1 field definition");
-    //
-    //     try
-    //     {
-    //         Monitor.Enter(BuiltTypes);
-    //         var className = GetTypeKey(fields);
-    //
-    //         if (BuiltTypes.ContainsKey(className))
-    //             return BuiltTypes[className];
-    //
-    //         var typeBuilder = ModuleBuilder.DefineType(className, TypeAttributes.Public | TypeAttributes.Class | TypeAttributes.Serializable);
-    //
-    //         foreach (var field in fields)                    
-    //             typeBuilder.DefineField(field.Key, field.Value, FieldAttributes.Public);
-    //
-    //         BuiltTypes[className] = typeBuilder.CreateType();
-    //
-    //         return BuiltTypes[className];
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         Log.Error(ex);
-    //     }
-    //     finally
-    //     {
-    //         Monitor.Exit(BuiltTypes);
-    //     }
-    //
-    //     return null;
-    // }
-    //
-    //
-    // public static Type GetDynamicType(IEnumerable<PropertyInfo> fields)
-    // {
-    //     var type = GetDynamicType(fields.ToDictionary(f => f.Name, f => f.PropertyType));
-    //     return type;
-    // }
-  //}
-    /*
-    private static Expression<Func<T>> DynamicSelectGenerator<T>(params string[] fields)
-    {
-        var entityFields = fields;
-        if (fields == null || fields.Length == 0)
-            // get Properties of the T
-            entityFields = typeof(T).GetProperties().Select(propertyInfo => propertyInfo.Name).ToArray();
-
-        // input parameter "x"
-        var xParameter = Expression.Parameter(typeof(T), "x");
-
-        // new statement "new Data()"
-        var xNew = Expression.New(typeof(T));
-
-        // create initializers
-        var bindings = entityFields
-            .Select(x =>
-            {
-                var xFieldAlias = x.Split(':');
-                var field = xFieldAlias[0];
-
-                var fieldSplit = field.Split('.');
-                if (fieldSplit.Length > 1)
-                {
-                    // original value "x.Nested.Field1"
-                    Expression exp = xParameter;
-                    foreach (var item in fieldSplit)
-                        exp = Expression.PropertyOrField(exp, item);
-
-                    // property "Field1"
-                    PropertyInfo member2 = null;
-                    member2 = xFieldAlias.Length > 1 ? typeof(T).GetProperty(xFieldAlias[1]) : typeof(T).GetProperty(fieldSplit[fieldSplit.Length - 1]);
-
-                    // set value "Field1 = x.Nested.Field1"
-                    if (member2 != null)
-                    {
-                      var res = Expression.Bind(member2, exp);
-                      return res;
-                    }
-                }
-                // property "Field1"
-                var mi = typeof(T).GetProperty(field);
-                PropertyInfo member;
-                if (xFieldAlias.Length > 1)
-                    member = typeof(T).GetProperty(xFieldAlias[1]);
-                else member = typeof(T).GetProperty(field);
-
-                // original value "x.Field1"
-                var xOriginal = Expression.Property(xParameter, mi);
-
-                // set value "Field1 = x.Field1"
-                return Expression.Bind(member, xOriginal);
-            }
-        );
-
-        // initialization "new Data { Field1 = x.Field1, Field2 = x.Field2 }"
-        var xInit = Expression.MemberInit(xNew, bindings);
-
-        // expression "x => new Data { Field1 = x.Field1, Field2 = x.Field2 }"
-        var lambda = Expression.Lambda<Func<T>>(xInit, xParameter);
-
-        return lambda;
-    }
-
-    private static Func<T, T> DynamicSelect<T>(string[] fields )
-    {
-      if (fields == null) throw new ArgumentNullException(nameof(fields));
-      // get Properties of the T
-      fields = typeof(T).GetProperties().Select(propertyInfo => propertyInfo.Name).ToArray();
-
-      // input parameter "o"
-      var xParameter = Expression.Parameter(typeof(T), "o");
-
-      // new statement "new Data()"
-      var xNew = Expression.New(typeof(T));
-
-      // create initializers
-      var bindings = fields.Split( ',' ).Select(o => o.Trim())
-        .Select(o =>
-          {
-
-            // property "Field1"
-            var mi = typeof(T).GetProperty(o);
-
-            // original value "o.Field1"
-            var xOriginal = Expression.Property(xParameter, mi);
-
-            // set value "Field1 = o.Field1"
-            return Expression.Bind(mi, xOriginal);
-          }
-        );
-
-      // initialization "new Data { Field1 = o.Field1, Field2 = o.Field2 }"
-      var xInit = Expression.MemberInit(xNew, bindings);
-
-      // expression "o => new Data { Field1 = o.Field1, Field2 = o.Field2 }"
-      var lambda = Expression.Lambda<Func<T, T>>(xInit, xParameter);
-
-      // compile to Func<Data, Data>
-      return lambda.Compile();
-    }
-    */
   }
   
 }

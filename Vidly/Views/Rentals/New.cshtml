@@ -31,7 +31,7 @@
       <div class="form-group">
         <label class="form-label mt-3">Movie</label>
         <div class="tt-container col-lg-12">
-          <input id="movie" name="movie" data-rule-atLeastOneMovie="true" type="text" value="" class="form-control" />
+          <input id="movie" name="movie" data-rule-atLeastOneMovie="true" data-rule-requiredAge="true" type="text" value="" class="form-control" />
         </div>
       </div>
 
@@ -44,8 +44,8 @@
       <button class="btn btn-primary mt-3">Submit</button>
     </form>
   </div>
-  <div class="col-lg-8 mt-8">
-    <table class="table table-bordered table-hover overflow-hidden" id="data-table">
+  <div class="col-lg-8 mt-5">
+    <table class="table table-sm table-bordered table-hover overflow-hidden" id="data-table">
       <thead>
       <tr>
         <th>Movie</th>
@@ -67,22 +67,24 @@
 {
   @Scripts.Render("~/bundles/jqueryval")
   <script src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
-  <script>
+  <script type="module">
+    import { Helpers } from '../../Scripts/Customs/helpers.js';
     let vm = {
       movieIds: []
     };
 
-    function remove(id) {
-      const elementId = `btn-delete-${id}`
-      document.getElementById(elementId).parentElement.parentElement.remove();
-      const index = vm.movieIds.findIndex(movieId => movieId == id);
-      vm.movieIds.splice(index, 1);
-    }
     
-
-
+  
 
     $(document).ready(function () {
+
+      $("#data-table").on("click", ".btn-remove", function () {
+        $(this).closest("tr").remove();
+        const id = $(this).data("id");
+
+        const index = vm.movieIds.findIndex(movieId => movieId == id);
+        vm.movieIds.splice(index, 1);
+      });
 
       const query = "pageSize=15&orderBy=Name&searchBy=Name&comparison=contains&search=%QUERY%";
 
@@ -131,6 +133,8 @@
         
       });
 
+     
+
       movies.initialize();
 
       $('#movie').typeahead({
@@ -168,7 +172,7 @@
                 </td>
 
                 <td style="max-width: 150px;">
-                  <button  class="btn btn-danger btn-delete" onclick="remove(${movie.id})" id="btn-delete-${movie.id}" data-id="${movie.id}">Remove</button>
+                  <button  class="btn btn-danger btn-sm btn-remove"  id="btn-delete-${movie.id}" data-id="${movie.id}">Remove</button>
                 </td>
               </tr>
             `
@@ -184,7 +188,7 @@
       $.validator.addMethod("atLeastOneMovie", function () {
         return vm.movieIds.length > 0;
       }, "Please select at least one movie.");
-
+      
       let validator = $("#newRental").validate({
         submitHandler: function () {
           $.ajax({
@@ -201,13 +205,15 @@
               validator.resetForm();
               $("#data-table > tbody").empty();
             })
-            .fail(function () {
-              toastr.error("Something unexpected happened.");
+            .fail(function (request, message, error) {
+              Helpers.handleException(request, message, error )
             });
+
           return false;
         }
       });
     });
 
+  
   </script>
 }

@@ -27,6 +27,7 @@ export class Helpers {
 
     static handleException = (request, message, error) => {
         let msg = `${error}<br />`;
+        console.log(request);
         if (request.responseJSON) {
             const response = request.responseJSON;
             msg += `${response.message}<br />`;

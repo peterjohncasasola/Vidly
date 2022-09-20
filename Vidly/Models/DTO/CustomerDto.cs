@@ -5,11 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using Vidly.Customs.Data_Annotations;
+using Vidly.Customs.Extensions.Models;
 
 namespace Vidly.Models.DTO
 {
   public class CustomerDto
   {
+    public CustomerDto()
+    {
+      
+    }
     public int Id { get; set; }
 
     [Required]
@@ -23,5 +28,6 @@ namespace Vidly.Models.DTO
     public bool IsSubscribedToNewsLetter { get; set; }
     [Required]
     public int MembershipTypeId { get; set; }
+    
   }
 }

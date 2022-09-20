@@ -1,7 +1,7 @@
 ﻿
-export class UI {
+export class UIHelper {
     
-    static loadEvents(filterQuery, callback) {
+    static loadEventHandler(filterQuery, callback) {
         $("#input-search").keyup(function (e) {
             filterQuery.page = 1;
             filterQuery.search = e.target.value;
@@ -16,7 +16,7 @@ export class UI {
         $("#btn-search").click(function () {
             filterQuery.page = 1;
             callback();
-        });
+        }); 
         
         $("#select-limit").on("change", function (e) {
             filterQuery.pageSize = e.target.value;
@@ -32,6 +32,13 @@ export class UI {
             $("#delete-id").val(button.attr("data-id"));
             $("#modal-delete-dialog").modal('show');
         });
+
+      $('#modal-dialog').modal({
+        backdrop: 'static',
+        keyboard: false
+      });
+
+     
     }
     
     static renderPaginationLink(pagination) {
@@ -122,12 +129,18 @@ export class UI {
         document.querySelector('#pagination-link').innerHTML = output;
     }
     
-    static showModalOnEdit(callback) {
+    static showModalOnEdit(callback = null) {
         $("#data-table").on("click", ".btn-edit", function () {
-            const button = $(this);
+           const button = $(this);
+          if (callback) {
             callback(button.attr("data-id"));
+          }
         });
+      
     }
+
+ 
+
     static RemoveRow(row) {
         $(row).closest('tr').remove();
     }
@@ -139,12 +152,18 @@ export class UI {
                     <span class="sr-only">Loading...</span>
                 </div> 
             </div>`;
-        $('.table-responsive').append(spinner);
+      $('.table-responsive > #data-table').append(spinner);
     }
     
     static hideLoading() {
         let element = $("#loading-spinner");
         element.remove();
     }
+
+  static (modalId = "modal-form") {
+    $(`#${modalId}`).on("submit", function (e) {
+      e.preventDefault();
+    });
+  }
 }
     

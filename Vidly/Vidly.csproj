@@ -337,6 +337,7 @@
     <Compile Include="Controllers\Api\CustomersController.cs" />
     <Compile Include="Controllers\Api\MembershipTypesController.cs" />
     <Compile Include="Controllers\Api\MoviesController.cs" />
+    <Compile Include="Controllers\Api\RentalDetailsController.cs" />
     <Compile Include="Controllers\Api\RentalsController.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -349,6 +350,7 @@
     <Compile Include="Customs\Extensions\Models\Meta.cs" />
     <Compile Include="Customs\Extensions\Models\QueryObject.cs" />
     <Compile Include="Customs\Extensions\Models\PaginatedResult.cs" />
+    <Compile Include="Customs\Extensions\Models\TransactionCode.cs" />
     <Compile Include="Customs\Extensions\QueryableExtension.cs" />
     <Compile Include="Customs\Extensions\Services\PaginationFilter.cs" />
     <Compile Include="Customs\Extensions\Services\UriService.cs" />
@@ -361,6 +363,11 @@
     <Compile Include="Customs\Models\QueryObject.cs" />
     <Compile Include="Customs\Services\PaginationFilter.cs" />
     <Compile Include="Customs\Services\UriService.cs" />
+    <Compile Include="EntityConfigurations\CustomerConfiguration.cs" />
+    <Compile Include="EntityConfigurations\MembershipTypeConfiguration.cs" />
+    <Compile Include="EntityConfigurations\MovieConfiguration.cs" />
+    <Compile Include="EntityConfigurations\RentalConfiguration.cs" />
+    <Compile Include="EntityConfigurations\RentalDetailConfiguration.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -390,12 +397,15 @@
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\DTO\MappingProfile.cs" />
     <Compile Include="Models\DTO\NewRentalDto.cs" />
+    <Compile Include="Models\DTO\RentalDetailDto.cs" />
+    <Compile Include="Models\Genre.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MembershipType.cs" />
     <Compile Include="Models\AppDbContext.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\DTO\CustomerDto.cs" />
     <Compile Include="Models\Movie.cs" />
+    <Compile Include="Models\MovieGenre.cs" />
     <Compile Include="Models\Rental.cs" />
     <Compile Include="Models\RentalDetail.cs" />
     <Compile Include="Models\ViewModels\CustomerFormViewModel.cs" />
@@ -611,6 +621,8 @@
     <Content Include="Scripts\Customs\Models\movie.js" />
     <Content Include="Scripts\Customs\Models\queryObject.js" />
     <Content Include="Scripts\Customs\moviesAjax.js" />
+    <Content Include="Scripts\Customs\newRental.js" />
+    <Content Include="Scripts\Customs\rentalDetails.js" />
     <Content Include="Scripts\Customs\rentals.js" />
     <Content Include="Scripts\Customs\ui.js" />
     <Content Include="Scripts\Customs\UI\ui.js" />
@@ -751,6 +763,8 @@
     <Content Include="Views\Shared\_PaginationLink.cshtml" />
     <Content Include="Views\Shared\_DeleteModal.cshtml" />
     <Content Include="Views\Shared\_Notification.cshtml" />
+    <Content Include="Views\Rentals\List.cshtml" />
+    <Content Include="Views\Rentals\_NewRentalModal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -768,7 +782,6 @@
     <Folder Include="obj\Debug\TempPE\" />
     <Folder Include="obj\Release\" />
     <Folder Include="obj\x86\Debug\TempPE\" />
-    <Folder Include="Scripts\Customs\UI\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

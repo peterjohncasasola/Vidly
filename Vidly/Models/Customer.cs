@@ -15,7 +15,7 @@ namespace Vidly.Models
     private int CalculateAge(DateTime birthDate)
     {
       var age = DateTime.Now.Year - birthDate.Year;
-      if (DateTime.Now.DayOfYear > birthDate.DayOfYear)
+      if (DateTime.Now.DayOfYear < birthDate.DayOfYear)
         age -= 1;
 
       return age;
@@ -27,7 +27,6 @@ namespace Vidly.Models
     [StringLength(255)]
     public string Name { get; set; }
 
-    [Column("DateOfBirth", Order = 3)]
     [Display(Name = "Date of Birth")]
     [DisplayFormat(DataFormatString = "{0:MMMM d, yyyy}")]
     [DateRange]
@@ -43,6 +42,7 @@ namespace Vidly.Models
     [Required]
     public int MembershipTypeId { get; set; }
     public MembershipType MembershipType { get; set; }
+    public ICollection<Rental> Rentals { get; set; }
     [NotMapped] public int Age => CalculateAge(BirthDate);
   }
 

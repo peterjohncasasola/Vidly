@@ -11,46 +11,53 @@
   </div>
 </div>
 <div class="row">
+  <div class="col-lg-2">
+    <button type="button" class="btn btn-primary btn-sm mb-sm-2" id="btn-new-rental-modal">
+      New Rental
+    </button>
+  </div>
   <div class="form-group row mb-3">
     <div class="col-lg-2 col-sm-12 pe-lg-1">
       <select class="form-select form-select-sm" id="filter-by">
         <option value="">Search By</option>
-        <option value="rental.customer.name">Customer</option>
-        <option value="movie.name">Movie</option>
+        <option value="customer.name">Customer</option>
+        <option value="rentalCode">Rental Code</option>
       </select>
     </div>
     <div class="col-lg-3 px-lg-1">
       <input type="text" class="form-control form-control-sm" id="input-search" placeholder="Search here...." aria-describedby="btn-search">
     </div>
     <div class="col-lg-3 px-lg-1">
-          <div class="form-check">
-            <label for="input-status" class="col-form-label-sm" id="label-status">Showing Returned</label>
-            <input class="form-check-input mt-2" id="input-status" name="isSubscribe" style="min-width: 10px !important;" checked type="checkbox">
-          </div>
-        </div>
+      <div class="form-check">
+        <label for="input-status" class="col-form-label-sm" id="label-status">Showing For Returns</label>
+        <input class="form-check-input mt-2" id="input-status" name="isSubscribe" style="min-width: 10px !important;" type="checkbox">
+      </div>
+    </div>
   </div>
 </div>
 
 <div class="row">
   <div class="form-group row mb-3">
+
     <div class="col-lg-2 col-sm-12 pe-lg-1">
       <label class="col-form-label col-form-label-sm" for="filter-date-by">Filter Date By</label>
       <select class="form-select form-select-sm" id="filter-date-by">
         <option value=""></option>
         <option value="rented">Date Rented</option>
-        <option value="movie.name">Date Returned</option>
+        <option value="completed">Date Completed</option>
       </select>
     </div>
-     <div class="col-lg-3 px-lg-1">
-       <label class="col-form-label col-form-label-sm" for="dateFrom">Date From</label>
-       <input class="form-control form-control-sm" id="dateFrom" name="dateFrom" type="date" value="">
-     </div>
+
+    <div class="col-lg-3 px-lg-1">
+      <label class="col-form-label col-form-label-sm" for="dateFrom">Date From</label>
+      <input class="form-control form-control-sm" id="dateFrom" name="dateFrom" type="date" value="">
+    </div>
     <div class="col-lg-3 px-lg-1">
       <label class="col-form-label col-form-label-sm" for="dateTo">Date To</label>
       <input class="form-control form-control-sm" id="dateTo" name="dateTo" type="date" value="">
     </div>
     <div class="col-lg-3 px-lg-1 mt-lg-4">
-      <button class="btn btn-sm btn-primary mt-lg-2" type="button" id="btn-search" >
+      <button class="btn btn-sm btn-primary mt-lg-2" type="button" id="btn-search">
         Search
       </button>
     </div>
@@ -61,25 +68,81 @@
   <table class="table table-sm table-bordered table-hover overflow-hidden" id="data-table">
     <tr>
       <th>
+        Rental Code
+      </th>
+      <th>
         Customer Name
-      </th>
-      <th>
-        Movie
-      </th>
-      <th>
-        Genre
       </th>
       <th>
         Date Rented
       </th>
       <th>
-        Date Returned
+        Date Completed
       </th>
-      <th></th>
     </tr>
     <tbody id="rentals-table-body"></tbody>
   </table>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="modal-dialog" tabindex="-1" role="dialog" aria-labelledby="modal-label" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable modal-fullscreen-xl-down modal-fullscreen-sm-down" role="document">
+    <div class="modal-content">
+      <div class="modal-header py-2">
+        <h6 class="modal-title fs-5" id="modal-label">Modal title</h6>
+        <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-1">
+
+        <div class="mt-2">
+          <div class="table-responsive">
+            <table class="table table-sm table-bordered overflow-hidden" id="rental-header-data-table">
+            </table>
+          </div>
+        </div>
+
+        <hr />
+        <div class="mb-1 mt-2">
+          <div class="table-responsive overflow-hidden">
+            <div class="row mb-3 mt-3">
+              <div class="col-lg-3">
+                <input type="text" id="search-movie" class="form-control form-control-sm" placeholder="Search movie....">
+              </div>
+            </div>
+
+            <table class="table table-responsive table-sm table-bordered table-hover overflow-hidden" id="rental-details-data-table">
+              <tr>
+                <th style="max-width: 20px">
+                </th>
+                <th>
+                  Movie Name
+                </th>
+                <th>
+                  Genre
+                </th>
+                <th>
+                  Date Returned
+                </th>
+
+                <th></th>
+              </tr>
+              <tbody id="rental-details-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <input class="form-control form-control-sm" id="primary-id" name="primary-id" type="hidden" value="">
+        <button type="button" class="btn btn-default btn-sm" data-bs-dismiss="modal">Close</button>
+        <button id="btn-save" type="button" class="btn btn-primary btn-sm" style="min-width: 10px !important;"> Save </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@Html.Partial("_NewRentalModal")
 
 @Html.Partial("_PaginationLink")
 
@@ -89,6 +152,9 @@
 
 
 @section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
+  <script src="http://twitter.github.io/typeahead.js/releases/latest/typeahead.bundle.js"></script>
   <script type="module" src="~/Scripts/Customs/rentals.js"></script>
+  <script type="module" src="~/Scripts/Customs/newRental.js"></script>
 }
 

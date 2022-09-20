@@ -23,24 +23,22 @@ namespace Vidly
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
-            );
+            ); 
+          
+      /*
+      ODataModelBuilder builder = new ODataConventionModelBuilder();
 
-
-            //Odata
-            /*
-            ODataModelBuilder builder = new ODataConventionModelBuilder();
-            
-            config.Count().Filter().OrderBy().Expand().Select().MaxTop(null);
-            builder.EntitySet<Rental>("Rentals");
-            builder.EntitySet<Customer>("Customers");
-            builder.EntitySet<RentalDetail>("RentalDetails");
-            builder.EntitySet<MembershipType>("MembershipTypes");
-            builder.EntitySet<Movie>("Movies");
-            config.MapODataServiceRoute(
-              routeName: "ODataApiRoute",
-              routePrefix: "odata/api",
-              model: builder.GetEdmModel());
-            */
-        }
+      config.Count().Filter().OrderBy().Expand().Select().MaxTop(null);
+      builder.EntitySet<Rental>("Rentals");
+      builder.EntitySet<Customer>("Customers");
+      builder.EntitySet<RentalDetail>("RentalDetails");
+      builder.EntitySet<MembershipType>("MembershipTypes");
+      builder.EntitySet<Movie>("Movies");
+      config.MapODataServiceRoute(
+        routeName: "ODataApiRoute",
+        routePrefix: "odata/api",
+        model: builder.GetEdmModel());
+      */
+    }
     }
 }

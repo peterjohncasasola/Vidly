@@ -1,7 +1,7 @@
 ﻿
 import { QueryObject as FilterQuery } from './Models/queryObject.js';
 import { Customer } from './Models/customer.js';
-import { UI } from './UI/ui.js';
+import { UIHelper } from './UI/ui.js';
 import {Helpers} from "./helpers.js";
 
 const form = document.querySelector("#modal-form");
@@ -12,8 +12,11 @@ let filterQuery = new FilterQuery(currentPage, 10);
 
 
 $(document).ready(function () {
-  UI.loadEvents(filterQuery, getCustomers);
-  UI.showModalOnEdit(getCustomer);
+
+  UIHelper.loadEventHandler(filterQuery, getCustomers);
+  UIHelper.showModalOnEdit(getCustomer);
+  //UIHelper.preventOnSubmit();
+  getCustomers();
   getMembershipTypes();
   
   $("#modal-form").validate({
@@ -45,20 +48,12 @@ $(document).ready(function () {
 });
 
 
-window.addEventListener('load', () => {
-  getCustomers();
-})
-
 btnModal.addEventListener('click', () => {
   formClear();
   $('#modal-label').text('New Customer');
   $('#modal-dialog').modal('show');
   $("#btn-submit").val("Save");
 })
-
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-});
 
 function saveCustomer(customer) {
   if (!customer.id) {
@@ -117,6 +112,9 @@ function buildTableRow(customer) {
       <td class="text-truncate" style="max-width: 150px;">
         ${ Helpers.formatDate(customer.birthDate)}
       </td>
+        <td class="text-truncate" style="max-width: 200px;">
+        ${ customer.age }
+      </td>
       <td class="text-truncate" style="max-width: 200px;">
         ${customer.membershipType?.name}
       </td>
@@ -137,7 +135,7 @@ function getCustomers() {
     dataType: 'json',
     success: function ({meta,data}) {
       filterQuery.page = meta.currentPage;
-      UI.renderPaginationLink(meta);
+      UIHelper.renderPaginationLink(meta);
       customerListSuccess(data);
     },
     error: function (request, message, error) {
@@ -173,12 +171,12 @@ function getMembershipTypes() {
 
 function customerListSuccess(products) {
   document.querySelector('#data-table-body').innerHTML = '';
-  UI.showLoading()
+  UIHelper.showLoading()
   $.each(products, function (index, product) {
     productAddRow(product);
   });
   
-  setTimeout(() => UI.hideLoading(), 500);
+  setTimeout(() => UIHelper.hideLoading(), 500);
 }
 
 function getCustomer(id) {

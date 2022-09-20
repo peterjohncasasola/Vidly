@@ -15,10 +15,10 @@ namespace Vidly.Controllers
       _dbContext = new AppDbContext();
     }
     // GET: Movies
-    public async Task<ActionResult> Index()
+    public ViewResult Index()
     {
-      var movies = await _dbContext.Movies.ToListAsync();
-      return View(movies);
+      // var movies = await _dbContext.Movies.ToListAsync();
+      return View("Index");
     }
 
     // GET: Movies/Details/5

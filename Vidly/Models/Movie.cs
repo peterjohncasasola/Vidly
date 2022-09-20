@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Vidly.Customs.Data_Annotations;
 
@@ -6,6 +7,11 @@ namespace Vidly.Models
 {
   public class Movie
   {
+    public Movie()
+    {
+      RentalDetails = new List<RentalDetail>();
+      Genres = new List<MovieGenre>();
+    }
     [Key]
     public int Id { get; set; }
     
@@ -24,17 +30,8 @@ namespace Vidly.Models
     public int Stock { get; set; }
     [Display(Name = "Minimum Age")]
     public int MinimumRequiredAge { get; set; }
+    public ICollection<MovieGenre> Genres { get; }
+    public ICollection<RentalDetail> RentalDetails { get; }
   }
 
-  public enum Genre
-  {
-    Drama,
-    Comedy,
-    Action,
-    Fantasy,
-    Horror,
-    Romance,
-    Western,
-    Thriller,
-  }
 }

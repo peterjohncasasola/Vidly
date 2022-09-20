@@ -1,6 +1,6 @@
 ﻿
 export class QueryObject {
-    constructor(page, pageSize, search, searchBy, comparison, orderBy, sortBy) {
+    constructor(page, pageSize, fields, search, searchBy, comparison, orderBy, sortBy) {
         this.page = page;
         this.pageSize = pageSize;
         this.searchBy = searchBy;
@@ -8,5 +8,6 @@ export class QueryObject {
         this.comparison = comparison;
         this.orderBy = orderBy;
         this.sortBy = sortBy;
+        this.fields = fields;
     }
 }

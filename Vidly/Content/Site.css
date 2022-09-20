@@ -109,5 +109,11 @@ table.table {
   /*dim the background*/
 }
 
+.modal-body {
+  max-height: 80vh;
+  overflow-y: auto;
+}
 
-
+.twitter-typeahead {
+  display: block !important;
+}

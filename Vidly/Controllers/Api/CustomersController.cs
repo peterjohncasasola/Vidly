@@ -23,7 +23,8 @@ namespace Vidly.Controllers.Api
     public async Task<IHttpActionResult> GetCustomers([FromUri] QueryObject query)
     {
 
-       var customers = DbContext.Customers.Include(c => c.MembershipType).AsQueryable();
+       var customers = DbContext.Customers
+                                      .Include(c => c.MembershipType);
        
        var result = await customers.Filter(query).ToPaginateAsync(query);
        
