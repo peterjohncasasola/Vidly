@@ -13,12 +13,12 @@ namespace Vidly.EntityConfigurations
     {
       HasKey(q => q.Id);
 
-      Property(t => t.Id).HasColumnName("intMovieId");
-      Property(t => t.Name).HasColumnName("strName").IsRequired();
-      Property(t => t.DateRelease).HasColumnName("dtmDateRelease").IsRequired();
-      Property(m => m.Genre).HasColumnName("strGenre").IsRequired();
-      Property(m => m.Stock).HasColumnName("intStock").IsRequired();
-      Property(m => m.MinimumRequiredAge).HasColumnName("intMinimumRequiredAge");
+      Property(t => t.Id).HasColumnName("Id");
+      Property(t => t.Name).HasColumnName("Name").IsRequired();
+      Property(t => t.DateRelease).HasColumnName("DateRelease").IsRequired();
+      Property(m => m.Genre).HasColumnName("Genre").IsRequired();
+      Property(m => m.Stock).HasColumnName("Stock").IsRequired();
+      Property(m => m.MinimumRequiredAge).HasColumnName("MinimumRequiredAge");
     }
   }
 }

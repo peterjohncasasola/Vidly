@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectVersion>4.1</ProjectVersion>
     <ProjectGuid>{226d3496-c235-4c5a-8c39-fb70cbe2518f}</ProjectGuid>
-    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql140DatabaseSchemaProvider</DSP>
     <OutputType>Database</OutputType>
     <RootPath>
     </RootPath>
@@ -62,13 +62,24 @@
     <Folder Include="Compares" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\Customer.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <RefactorLog Include="SQLDatabaseVidly.refactorlog" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Compares\SqlDbVidlyFromSSTD.scmp" />
     <None Include="PublishLocations\SQLDatabaseVidly.publish.xml" />
+    <None Include="SQLDatabaseVidly_Smart_ASP.Net.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\Rentals.sql" />
+    <Build Include="dbo\Tables\RentalDetails.sql" />
+    <Build Include="dbo\Tables\Movies.sql" />
+    <Build Include="dbo\Tables\MembershipTypes.sql" />
+    <Build Include="dbo\Tables\Customers.sql" />
+    <Build Include="dbo\Tables\AspNetUsers.sql" />
+    <Build Include="dbo\Tables\AspNetUserRoles.sql" />
+    <Build Include="dbo\Tables\AspNetUserLogins.sql" />
+    <Build Include="dbo\Tables\AspNetUserClaims.sql" />
+    <Build Include="dbo\Tables\AspNetRoles.sql" />
+    <Build Include="dbo\Tables\__MigrationHistory.sql" />
   </ItemGroup>
 </Project>

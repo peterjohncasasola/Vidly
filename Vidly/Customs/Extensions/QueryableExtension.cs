@@ -146,8 +146,7 @@ namespace Vidly.Customs.Extensions
     private static Expression<Func<T, bool>> BuildPredicate<T>(string propertyName, string comparison, string value)
     {
       var item = Expression.Parameter(typeof(T), "x");
-      Expression member = item;
-      foreach (var prop in propertyName.Split('.')) member = Expression.Property(member, prop);
+      Expression member = propertyName.Split('.').Aggregate<string, Expression>(item, (current, prop) => Expression.Property(current, prop));
       var constant = Expression.Constant(value);
       var left = propertyName.Split('.').Aggregate((Expression)item, Expression.Property);
       var body = MakeComparison(left, comparison, value);
@@ -155,28 +154,18 @@ namespace Vidly.Customs.Extensions
     }
     private static Expression MakeComparison(Expression left, string comparison, string value)
     {
-      switch (comparison.ToLower())
-      {
-        case "eq":
-          return MakeBinary(ExpressionType.Equal, left, value);
-        case "ne":
-          return MakeBinary(ExpressionType.NotEqual, left, value);
-        case "gt":
-          return MakeBinary(ExpressionType.GreaterThan, left, value);
-        case "ge":
-          return MakeBinary(ExpressionType.GreaterThanOrEqual, left, value);
-        case "lt":
-          return MakeBinary(ExpressionType.LessThan, left, value);
-        case "le":
-          return MakeBinary(ExpressionType.LessThanOrEqual, left, value);
-        case "contains":
-        case "starts-with":
-        case "ends-with":
-          return Expression.Call(MakeString(left), comparison, Type.EmptyTypes, Expression.Constant(value, typeof(string)));
-        default:
-          throw new NotSupportedException($"Invalid comparison operator '{comparison}'.");
-      }
-    }
+            return comparison.ToLower() switch
+            {
+                "eq" => MakeBinary(ExpressionType.Equal, left, value),
+                "ne" => MakeBinary(ExpressionType.NotEqual, left, value),
+                "gt" => MakeBinary(ExpressionType.GreaterThan, left, value),
+                "ge" => MakeBinary(ExpressionType.GreaterThanOrEqual, left, value),
+                "lt" => MakeBinary(ExpressionType.LessThan, left, value),
+                "le" => MakeBinary(ExpressionType.LessThanOrEqual, left, value),
+                "contains" or "starts-with" or "ends-with" => Expression.Call(MakeString(left), comparison, Type.EmptyTypes, Expression.Constant(value, typeof(string))),
+                _ => throw new NotSupportedException($"Invalid comparison operator '{comparison}'."),
+            };
+        }
     private static Expression<Func<T, bool>> GetFilter<T>(string propertyName, string value)
     {
       var item = Expression.Parameter(typeof(T), "item");

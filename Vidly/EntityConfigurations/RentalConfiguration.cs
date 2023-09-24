@@ -21,12 +21,12 @@ namespace Vidly.EntityConfigurations
         .WithRequired(r => r.Rental)
         .HasForeignKey(r => r.RentalId);
 
-      Property(t => t.DateRented).HasColumnName("dtmDateRented").IsRequired();
-      Property(t => t.CustomerId).HasColumnName("intCustomerId").IsRequired();
-      Property(t => t.Id).HasColumnName("intRentalId").IsRequired();
-      Property(t => t.IsCompleted).HasColumnName("ysnCompleted").IsOptional();
-      Property(t => t.DateCompleted).HasColumnName("dtmDateCompleted").IsOptional();
-      Property(t => t.RentalCode).HasColumnName("strTransactionCode").IsRequired();
+      Property(t => t.DateRented).HasColumnName("DateRented").IsRequired();
+      Property(t => t.CustomerId).HasColumnName("CustomerId").IsRequired();
+      Property(t => t.Id).HasColumnName("Id").IsRequired();
+      Property(t => t.IsCompleted).HasColumnName("IsCompleted").IsOptional();
+      Property(t => t.DateCompleted).HasColumnName("DateCompleted").IsOptional();
+      Property(t => t.RentalCode).HasColumnName("RentalCode").IsRequired();
     }
   }
 }

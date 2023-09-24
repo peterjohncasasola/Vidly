@@ -21,11 +21,11 @@ namespace Vidly.EntityConfigurations
         .WithMany(t => t.RentalDetails)
         .HasForeignKey(t => t.MovieId);
 
-      Property(t => t.Id).HasColumnName("intRentalDetailId").IsRequired();
-      Property(t => t.RentalId).HasColumnName("intRentalId").IsRequired();
-      Property(t => t.MovieId).HasColumnName("intMovieId").IsRequired();
-      Property(t => t.IsReturned).HasColumnName("ysnIsReturned").IsRequired();
-      Property(t => t.DateReturned).HasColumnName("dtmDateReturned").IsOptional();
+      Property(t => t.Id).HasColumnName("Id").IsRequired();
+      Property(t => t.RentalId).HasColumnName("RentalId").IsRequired();
+      Property(t => t.MovieId).HasColumnName("MovieId").IsRequired();
+      Property(t => t.IsReturned).HasColumnName("IsReturned").IsRequired();
+      Property(t => t.DateReturned).HasColumnName("DateReturned").IsOptional();
 
     }
   }

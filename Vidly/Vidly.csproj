@@ -399,6 +399,7 @@
     <Compile Include="Models\DTO\NewRentalDto.cs" />
     <Compile Include="Models\DTO\RentalDetailDto.cs" />
     <Compile Include="Models\Genre.cs" />
+    <Compile Include="Models\IGetParameter.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MembershipType.cs" />
     <Compile Include="Models\AppDbContext.cs" />
@@ -406,6 +407,8 @@
     <Compile Include="Models\DTO\CustomerDto.cs" />
     <Compile Include="Models\Movie.cs" />
     <Compile Include="Models\MovieGenre.cs" />
+    <Compile Include="Models\QueryParamBinder.cs" />
+    <Compile Include="Models\QueryParameter.cs" />
     <Compile Include="Models\Rental.cs" />
     <Compile Include="Models\RentalDetail.cs" />
     <Compile Include="Models\ViewModels\CustomerFormViewModel.cs" />
@@ -425,10 +428,6 @@
     <Content Include="bin\Microsoft.Owin.Security.OAuth.dll" />
     <Content Include="bin\Owin.dll" />
     <Content Include="bin\Vidly.dll" />
-    <Content Include="bin\Vidly.Models.AppDbContext.mdf" />
-    <Content Include="bin\Vidly.Models.AppDbContext_log.ldf">
-      <DependentUpon>Vidly.Models.AppDbContext.mdf</DependentUpon>
-    </Content>
     <Content Include="bin\Vidly.pdb" />
     <Content Include="Content\bootstrap-lumen.css" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -609,12 +608,13 @@
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
     <Content Include="libman.json" />
-    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
-    <Content Include="obj\Debug\Vidly.csproj.AssemblyReference.cache" />
+    
+    <!-- <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" /> -->
     <Content Include="obj\Debug\Vidly.csproj.CopyComplete" />
     <Content Include="obj\Debug\Vidly.csproj.CoreCompileInputs.cache" />
     <Content Include="obj\Debug\Vidly.csproj.GenerateResource.cache" />
-    <Content Include="obj\x86\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <!-- <Content Include="obj\x86\Debug\DesignTimeResolveAssemblyReferencesInput.cache" /> -->
+    <None Include="Properties\PublishProfiles\ptrjhn-001-site1 - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\Customs\customerAjax.js" />
     <Content Include="Scripts\Customs\Models\customer.js" />

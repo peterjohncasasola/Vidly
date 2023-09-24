@@ -14,14 +14,14 @@ namespace Vidly.EntityConfigurations
       HasKey(q => q.Id);
       HasRequired(t => t.MembershipType);
 
-      ToTable("tblCustomers");
+      ToTable("Customers");
 
-      Property(m => m.Id).HasColumnName("intCustomerId");
-      Property(t => t.MembershipTypeId).HasColumnName("intMembershipTypeId");
-      Property(m => m.Name).HasColumnName("strName").IsRequired();
-      Property(t => t.IsSubscribedToNewsLetter).HasColumnName("ysnSubscribedToNewsLetter");
-      Property(t => t.Address).HasColumnName("strCompleteAddress");
-      Property(t => t.BirthDate).HasColumnName("dtmDateOfBirth");
+      Property(m => m.Id).HasColumnName("Id");
+      Property(t => t.MembershipTypeId).HasColumnName("MembershipTypeId");
+      Property(m => m.Name).HasColumnName("Name").IsRequired();
+      Property(t => t.IsSubscribedToNewsLetter).HasColumnName("IsSubscribedToNewsLetter");
+      Property(t => t.Address).HasColumnName("Address");
+      Property(t => t.BirthDate).HasColumnName("DateOfBirth");
 
       HasMany(t => t.Rentals);
     }

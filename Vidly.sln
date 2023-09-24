@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vidly", "Vidly\Vidly.csproj
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SQLDatabaseVidly", "SQLDatabaseVidly\SQLDatabaseVidly.sqlproj", "{226D3496-C235-4C5A-8C39-FB70CBE2518F}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SqlDataExistingVidlyDb", "SqlDataExistingVidlyDb\SqlDataExistingVidlyDb.sqlproj", "{F6DDCD29-97F2-4729-ABB6-73D23FC30838}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,12 +23,6 @@ Global
 		{226D3496-C235-4C5A-8C39-FB70CBE2518F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{226D3496-C235-4C5A-8C39-FB70CBE2518F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{226D3496-C235-4C5A-8C39-FB70CBE2518F}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{F6DDCD29-97F2-4729-ABB6-73D23FC30838}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F6DDCD29-97F2-4729-ABB6-73D23FC30838}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F6DDCD29-97F2-4729-ABB6-73D23FC30838}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{F6DDCD29-97F2-4729-ABB6-73D23FC30838}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F6DDCD29-97F2-4729-ABB6-73D23FC30838}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F6DDCD29-97F2-4729-ABB6-73D23FC30838}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
